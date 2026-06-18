@@ -1,11 +1,12 @@
 import { useEffect, useState, type FormEvent } from 'react';
+import { useHistory } from 'react-router-dom';
 import {
   IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle,
   IonToolbar, IonList, IonItem, IonLabel, IonSpinner, IonText, IonSearchbar,
   IonBadge, IonButton, IonIcon, IonFab, IonFabButton, IonModal, IonInput,
   IonTextarea, IonSelect, IonSelectOption,
 } from '@ionic/react';
-import { add, createOutline, trashOutline, close } from 'ionicons/icons';
+import { add, createOutline, trashOutline, close, documentTextOutline } from 'ionicons/icons';
 import { supabase } from '../lib/supabase';
 
 interface PetRow {
@@ -30,6 +31,7 @@ function idade(nascimento: string | null): string {
 }
 
 export default function Pacientes() {
+  const history = useHistory();
   const [pets, setPets] = useState<PetRow[]>([]);
   const [tutoresOpc, setTutoresOpc] = useState<TutorOpc[]>([]);
   const [busca, setBusca] = useState('');
@@ -107,6 +109,9 @@ export default function Pacientes() {
                   <p>Tutor: {p.tutores?.nome ?? '—'}</p>
                 </IonLabel>
                 {p.porte && <IonBadge color="secondary">{p.porte}</IonBadge>}
+                <IonButton fill="clear" color="medium" slot="end" title="Prontuários" onClick={() => history.push(`/pacientes/${p.id}/prontuarios`)}>
+                  <IonIcon slot="icon-only" icon={documentTextOutline} />
+                </IonButton>
                 <IonButton fill="clear" slot="end" onClick={() => { setForm(p); setAberto(true); }}>
                   <IonIcon slot="icon-only" icon={createOutline} />
                 </IonButton>
