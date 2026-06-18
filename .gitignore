@@ -1,0 +1,27 @@
+# ===== Dependências =====
+node_modules/
+
+# ===== Build / saída de produção =====
+dist/
+build/
+
+# ===== Variáveis de ambiente e segredos =====
+# (mantém os exemplos, ignora os arquivos reais com chaves)
+.env
+.env.*
+*.local
+!.env.example
+
+# ===== Configurações locais (Claude / editores) =====
+.claude/
+.vscode/
+.idea/
+
+# ===== Sistema operacional =====
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===== Logs =====
+*.log
+npm-debug.log*

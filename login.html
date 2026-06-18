@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Área Restrita — Cia Pet</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐾</text></svg>" />
+</head>
+<body>
+  <div style="position:fixed; top:16px; right:16px; z-index:99">
+    <button class="btn-tema" id="btnTema" title="Mudar tema"></button>
+  </div>
+  <div class="tela-login">
+    <div class="login-box">
+      <div class="logo">
+        <span class="logo__icone"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-9.5-9.2C1 8 3 5 6 5c2 0 3.2 1.2 4 2.4C10.8 6.2 12 5 14 5c3 0 5 3 3.5 6.8C19.5 16.4 12 21 12 21z"/></svg></span>
+        <span class="logo__texto">Cia Pet<small>Painel do Veterinário</small></span>
+      </div>
+      <h1>Área Restrita</h1>
+      <p class="sub">Acesso exclusivo da equipe clínica</p>
+
+      <div class="alerta alerta--erro" id="alertaErro">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span id="alertaErroTexto"></span>
+      </div>
+
+      <form id="formLogin" novalidate>
+        <div class="campo">
+          <label>E-mail ou CRMV</label>
+          <input type="text" name="usuario" placeholder="vet@ciapet.com.br" autocomplete="username" required />
+        </div>
+        <div class="campo">
+          <label>Senha</label>
+          <input type="password" name="senha" placeholder="••••••••" autocomplete="current-password" required />
+        </div>
+        <button type="submit" class="btn btn--primario btn--bloco">Entrar no painel</button>
+      </form>
+
+      <p class="cadeado">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        Conexão protegida — sigilo dos prontuários
+      </p>
+
+      <div class="credenciais-demo">
+        <b>Acesso de demonstração</b><br>
+        E-mail: <b>vet@ciapet.com.br</b><br>
+        Senha: <b>123456</b>
+      </div>
+
+      <div class="voltar-site"><a href="index.html">← Voltar ao site</a></div>
+    </div>
+  </div>
+
+  <script src="js/tema.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+/* =============================================================
+   Cia Pet — Tema (verde + pêssego pastel) sobre o Ionic
+   ============================================================= */
+:root {
+  /* Cor primária — verde */
+  --ion-color-primary: #2a9d78;
+  --ion-color-primary-rgb: 42, 157, 120;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #258a6a;
+  --ion-color-primary-tint: #3fa786;
+
+  /* Cor secundária — pêssego pastel */
+  --ion-color-secondary: #ffd9bd;
+  --ion-color-secondary-rgb: 255, 217, 189;
+  --ion-color-secondary-contrast: #8a4f1d;
+  --ion-color-secondary-contrast-rgb: 138, 79, 29;
+  --ion-color-secondary-shade: #e0bfa6;
+  --ion-color-secondary-tint: #ffddc4;
+
+  --ion-background-color: #f4f8f6;
+  --ion-background-color-rgb: 244, 248, 246;
+}
+
+.marca-titulo { font-weight: 700; letter-spacing: .2px; }

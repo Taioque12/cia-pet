@@ -1,0 +1,68 @@
+==========================================================
+  CIA PET — Site (Protótipo de demonstração)
+==========================================================
+
+COMO ABRIR
+----------
+Dê dois cliques no arquivo "index.html".
+Ele abre no seu navegador (Chrome, Edge ou Firefox). Não precisa
+instalar nada.
+
+ESTRUTURA DAS 3 PARTES
+----------------------
+1) PÁGINA INICIAL (index.html)
+   - Cabeçalho com logo e menu (Início, Sobre, Identidade, Agendamento, Área Restrita)
+   - Sobre Nós (história e fundação - 2013)
+   - Identidade: Visão, Missão e Metas, Valores
+   - Rodapé com CNPJ, horário e redes sociais
+
+2) AGENDAMENTO E CONTATO (seção dentro do index.html)
+   - Telefone, WhatsApp, e-mail, endereço e mapa
+   - Formulário: tutor, telefone, pet, setor (Clínica ou Estética),
+     data e turno
+   - Ao enviar, o pedido fica com status "PENDENTE" e aparece como
+     alerta no painel do veterinário.
+
+3) ÁREA RESTRITA (login.html -> painel.html)
+   - Login do veterinário
+   - Dashboard: agenda confirmada do dia + alertas de pendências
+   - Agendamentos: confirmar / cancelar
+   - Tutores: cadastro do cliente (nome, CPF, endereço, contatos)
+   - Pacientes (Pets): espécie, raça, idade, porte, alergias, condições
+   - Prontuário: anamnese, peso, exames, vacinas e prescrições
+   - Estoque / Insumos: controle de medicações, materiais, EPIs e
+     higiene; entrada/saída de estoque, estoque mínimo com alerta de
+     baixa e controle de validade (alertas no Dashboard)
+   - Financeiro:
+       * Fluxo de Caixa - entradas e saídas, saldo em caixa, resultado
+         do mês, status pago/pendente
+       * Notas Fiscais & Boletos - nº da nota, descrição, cliente/
+         fornecedor, data de emissão, data de pagamento, linha do
+         boleto, valor, contas a pagar/receber e contas vencidas.
+         Ao "dar baixa" numa nota, ela é lançada no caixa automaticamente.
+       * Separação por setor: Consolidado, Clínica Veterinária e Banho
+         e Tosa (faturamentos divididos na mesma empresa).
+       * Botão "Exportar Excel": baixa uma planilha .xlsx com 3 abas
+         (Resumo, Fluxo de Caixa e Notas Fiscais), respeitando o setor
+         selecionado. Sem internet, exporta em CSV automaticamente.
+
+ACESSO DE DEMONSTRAÇÃO (Área Restrita)
+--------------------------------------
+   E-mail: vet@ciapet.com.br
+   Senha:  123456
+
+OBSERVAÇÕES IMPORTANTES
+-----------------------
+- Este é um PROTÓTIPO. Os dados (agendamentos, cadastros, prontuários)
+  ficam salvos apenas no navegador do computador onde você abriu o site
+  (tecnologia "localStorage"). Não há servidor nem banco de dados real,
+  e os dados não são compartilhados entre computadores.
+- O login NÃO usa criptografia de verdade - é apenas simulado para
+  demonstrar o fluxo.
+- Para virar um sistema real (multiusuário, dados na nuvem, login seguro,
+  envio de e-mail/WhatsApp para a recepção), é preciso desenvolver um
+  back-end. É o próximo passo quando você decidir avançar.
+
+Para apagar os dados de teste e recomeçar do zero: abra o site, pressione
+F12 (Console do navegador) e digite:  DB.reset()
+==========================================================

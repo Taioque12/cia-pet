@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Painel do Veterinário — Cia Pet</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐾</text></svg>" />
+</head>
+<body>
+  <div class="painel">
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="sidebar">
+      <div class="logo">
+        <span class="logo__icone"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-9.5-9.2C1 8 3 5 6 5c2 0 3.2 1.2 4 2.4C10.8 6.2 12 5 14 5c3 0 5 3 3.5 6.8C19.5 16.4 12 21 12 21z"/></svg></span>
+        <span class="logo__texto">Cia Pet<small>Painel</small></span>
+      </div>
+      <ul class="menu-lateral">
+        <li><button class="ativo" data-aba="dashboard"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg> Dashboard</button></li>
+        <li><button data-aba="agendamentos"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg> Agendamentos</button></li>
+        <li><button data-aba="pacientes"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> Pacientes</button></li>
+        <li><button data-aba="tutores"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.9"/></svg> Tutores</button></li>
+        <li><button data-aba="estoque"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.7l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.7l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.3 7L12 12l8.7-5M12 22V12"/></svg> Estoque / Insumos</button></li>
+        <li><button data-aba="financeiro"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg> Financeiro</button></li>
+      </ul>
+      <div class="sidebar__rodape">
+        <button class="btn btn--laranja btn--bloco btn--pequeno" id="btnSair">Sair do painel</button>
+      </div>
+    </aside>
+
+    <!-- ===== CONTEÚDO ===== -->
+    <main class="conteudo">
+      <div class="topbar">
+        <h1 id="tituloAba">Dashboard</h1>
+        <div style="display:flex; align-items:center; gap:12px">
+        <button class="btn-tema" id="btnTema" title="Mudar tema"></button>
+        <div class="usuario-chip">
+          <div class="avatar" id="avatar">--</div>
+          <div><strong id="usuarioNome">—</strong><small id="usuarioCRMV">—</small></div>
+        </div>
+        </div>
+      </div>
+
+      <div class="painel-area">
+
+        <!-- ===== ABA: DASHBOARD ===== -->
+        <section class="aba ativa" id="aba-dashboard">
+          <div class="cards-stats">
+            <div class="stat"><b id="statHoje">0</b><span>Consultas confirmadas hoje</span></div>
+            <div class="stat"><b id="statPendentes">0</b><span>Agendamentos pendentes</span></div>
+            <div class="stat"><b id="statPacientes">0</b><span>Pacientes cadastrados</span></div>
+            <div class="stat"><b id="statTutores">0</b><span>Tutores cadastrados</span></div>
+          </div>
+
+          <div class="painel-card" id="cardAlertas">
+            <div class="painel-card__cab">
+              <h2>🔔 Alertas do sistema</h2>
+            </div>
+            <div id="listaAlertas"></div>
+          </div>
+
+          <div class="painel-card">
+            <div class="painel-card__cab">
+              <h2>📅 Agenda confirmada de hoje</h2>
+              <span class="badge badge--confirmado" id="dataHoje"></span>
+            </div>
+            <div id="agendaHoje"></div>
+          </div>
+        </section>
+
+        <!-- ===== ABA: AGENDAMENTOS ===== -->
+        <section class="aba" id="aba-agendamentos">
+          <div class="painel-card">
+            <div class="painel-card__cab">
+              <h2>Todos os agendamentos</h2>
+              <select id="filtroStatus" class="btn-icone" style="padding:8px 12px">
+                <option value="">Todos os status</option>
+                <option>Pendente</option>
+                <option>Confirmado</option>
+                <option>Cancelado</option>
+              </select>
+            </div>
+            <div style="overflow-x:auto"><table>
+              <thead><tr><th>Data</th><th>Turno</th><th>Tutor</th><th>Pet</th><th>Setor</th><th>Status</th><th>Ações</th></tr></thead>
+              <tbody id="tabelaAgendamentos"></tbody>
+            </table></div>
+          </div>
+        </section>
+
+        <!-- ===== ABA: PACIENTES (PETS) ===== -->
+        <section class="aba" id="aba-pacientes">
+          <div class="painel-card">
+            <div class="painel-card__cab">
+              <h2>Pacientes (Pets)</h2>
+              <div style="display:flex; gap:10px; flex-wrap:wrap">
+                <input type="search" id="buscaPet" class="btn-icone" style="padding:8px 12px; min-width:200px" placeholder="🔍 Nome, raça, tutor..." />
+                <select id="filtroespeciePet" class="btn-icone" style="padding:8px 12px">
+                  <option value="">Todas as espécies</option>
+                  <option>Canino</option>
+                  <option>Felino</option>
+                  <option>Ave</option>
+                  <option>Roedor</option>
+                  <option>Réptil</option>
+                  <option>Outro</option>
+                </select>
+                <select id="filtroPortePet" class="btn-icone" style="padding:8px 12px">
+                  <option value="">Todos os portes</option>
+                  <option>Pequeno</option>
+                  <option>Médio</option>
+                  <option>Grande</option>
+                  <option>Gigante</option>
+                </select>
+                <button class="btn btn--primario btn--pequeno" id="btnNovoPet">+ Novo paciente</button>
+              </div>
+            </div>
+            <div style="overflow-x:auto"><table>
+              <thead><tr><th>Nome</th><th>Espécie / Raça</th><th>Porte</th><th>Idade</th><th>Tutor</th><th>Ações</th></tr></thead>
+              <tbody id="tabelaPets"></tbody>
+            </table></div>
+          </div>
+        </section>
+
+        <!-- ===== ABA: TUTORES ===== -->
+        <section class="aba" id="aba-tutores">
+          <div class="painel-card">
+            <div class="painel-card__cab">
+              <h2>Tutores (Clientes)</h2>
+              <button class="btn btn--primario btn--pequeno" id="btnNovoTutor">+ Novo tutor</button>
+            </div>
+            <div style="overflow-x:auto"><table>
+              <thead><tr><th>Nome</th><th>CPF</th><th>Telefone</th><th>E-mail</th><th>Pets</th><th>Ações</th></tr></thead>
+              <tbody id="tabelaTutores"></tbody>
+            </table></div>
+          </div>
+        </section>
+
+        <!-- ===== ABA: ESTOQUE / INSUMOS ===== -->
+        <section class="aba" id="aba-estoque">
+          <div class="cards-stats">
+            <div class="stat"><b id="statInsumos">0</b><span>Itens cadastrados</span></div>
+            <div class="stat"><b id="statBaixos" style="color:var(--aviso)">0</b><span>Em estoque baixo</span></div>
+            <div class="stat"><b id="statVencendo" style="color:var(--erro)">0</b><span>Vencendo / vencidos</span></div>
+            <div class="stat"><b id="statCategorias">0</b><span>Categorias</span></div>
+          </div>
+
+          <div class="painel-card">
+            <div class="painel-card__cab">
+              <h2>Controle de insumos</h2>
+              <div style="display:flex; gap:10px; flex-wrap:wrap">
+                <input type="search" id="buscaInsumo" class="btn-icone" style="padding:8px 12px" placeholder="🔍 Buscar item..." />
+                <select id="filtroCategoria" class="btn-icone" style="padding:8px 12px">
+                  <option value="">Todas as categorias</option>
+                  <option>Medicação</option>
+                  <option>Material/Ferramenta</option>
+                  <option>Descartável/EPI</option>
+                  <option>Higiene</option>
+                  <option>Outro</option>
+                </select>
+                <button class="btn btn--primario btn--pequeno" id="btnNovoInsumo">+ Novo insumo</button>
+              </div>
+            </div>
+            <div style="overflow-x:auto"><table>
+              <thead><tr><th>Item</th><th>Categoria</th><th>Estoque</th><th>Mínimo</th><th>Validade</th><th>Situação</th><th>Movimentar</th><th>Ações</th></tr></thead>
+              <tbody id="tabelaInsumos"></tbody>
+            </table></div>
+          </div>
+        </section>
+
+        <!-- ===== ABA: FINANCEIRO ===== -->
+        <section class="aba" id="aba-financeiro">
+          <div class="setor-seletor">
+            <span class="setor-label">Setor:</span>
+            <button class="setor-btn ativo" data-setor="">📊 Consolidado</button>
+            <button class="setor-btn" data-setor="Clínica Veterinária">🩺 Clínica Veterinária</button>
+            <button class="setor-btn" data-setor="Banho e Tosa">🛁 Banho e Tosa</button>
+            <button class="btn btn--primario btn--pequeno" id="btnExportar" style="margin-left:auto">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Exportar Excel
+            </button>
+          </div>
+
+          <div class="sub-pills">
+            <button class="sub-pill ativo" data-sub="caixa">💰 Fluxo de Caixa</button>
+            <button class="sub-pill" data-sub="notas">🧾 Notas Fiscais & Boletos</button>
+          </div>
+
+          <!-- ----- SUB: FLUXO DE CAIXA ----- -->
+          <div class="sub-conteudo ativa" id="sub-caixa">
+            <div class="cards-stats">
+              <div class="stat"><b id="finSaldo">R$ 0,00</b><span>Saldo em caixa</span></div>
+              <div class="stat"><b id="finEntradas" style="color:var(--ok)">R$ 0,00</b><span>Entradas do mês</span></div>
+              <div class="stat"><b id="finSaidas" style="color:var(--erro)">R$ 0,00</b><span>Saídas do mês</span></div>
+              <div class="stat"><b id="finResultado">R$ 0,00</b><span>Resultado do mês</span></div>
+            </div>
+            <div class="painel-card">
+              <div class="painel-card__cab">
+                <h2>Movimentações de caixa</h2>
+                <div style="display:flex; gap:10px; flex-wrap:wrap">
+                  <input type="search" id="buscaCaixa" class="btn-icone" style="padding:8px 12px; min-width:180px" placeholder="🔍 Buscar..." />
+                  <select id="filtroTipoCaixa" class="btn-icone" style="padding:8px 12px"><option value="">Todos os tipos</option><option>Entrada</option><option>Saída</option></select>
+                  <select id="filtroStatusCaixa" class="btn-icone" style="padding:8px 12px"><option value="">Todos os status</option><option>Pago</option><option>Pendente</option></select>
+                  <button class="btn btn--primario btn--pequeno" id="btnNovaEntrada">+ Entrada</button>
+                  <button class="btn btn--laranja btn--pequeno" id="btnNovaSaida">− Saída</button>
+                </div>
+              </div>
+              <div style="overflow-x:auto"><table>
+                <thead><tr><th>Data</th><th>Descrição</th><th>Setor</th><th>Categoria</th><th>Forma</th><th>Tipo</th><th>Valor</th><th>Status</th><th>Ações</th></tr></thead>
+                <tbody id="tabelaCaixa"></tbody>
+              </table></div>
+            </div>
+          </div>
+
+          <!-- ----- SUB: NOTAS FISCAIS ----- -->
+          <div class="sub-conteudo" id="sub-notas">
+            <div class="cards-stats">
+              <div class="stat"><b id="finReceber" style="color:var(--ok)">R$ 0,00</b><span>A receber</span></div>
+              <div class="stat"><b id="finPagar" style="color:var(--erro)">R$ 0,00</b><span>A pagar</span></div>
+              <div class="stat"><b id="finVencidas" style="color:var(--erro)">0</b><span>Contas vencidas</span></div>
+              <div class="stat"><b id="finNotasMes">R$ 0,00</b><span>Emitido no mês</span></div>
+            </div>
+            <div class="painel-card">
+              <div class="painel-card__cab">
+                <h2>Notas fiscais &amp; boletos</h2>
+                <div style="display:flex; gap:10px; flex-wrap:wrap">
+                  <input type="search" id="buscaNota" class="btn-icone" style="padding:8px 12px; min-width:180px" placeholder="🔍 Nº, descrição, parte..." />
+                  <select id="filtroTipoNota" class="btn-icone" style="padding:8px 12px"><option value="">Todos os tipos</option><option>Entrada</option><option>Saída</option></select>
+                  <select id="filtroStatusNota" class="btn-icone" style="padding:8px 12px"><option value="">Todos os status</option><option>Pago</option><option>Pendente</option><option>Vencida</option></select>
+                  <button class="btn btn--primario btn--pequeno" id="btnNovaNota">+ Nova nota fiscal</button>
+                </div>
+              </div>
+              <div style="overflow-x:auto"><table>
+                <thead><tr><th>Nº NF</th><th>Descrição</th><th>Setor</th><th>Cliente / Fornecedor</th><th>Emissão</th><th>Pagamento</th><th>Boleto</th><th>Valor</th><th>Status</th><th>Ações</th></tr></thead>
+                <tbody id="tabelaNotas"></tbody>
+              </table></div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ===== MODAL TUTOR ===== -->
+  <div class="modal-fundo" id="modalTutor">
+    <div class="modal">
+      <div class="modal__cab">
+        <div><h2 id="tituloModalTutor">Novo tutor</h2><p>Cadastro do cliente</p></div>
+        <button class="fechar-modal" data-fechar>&times;</button>
+      </div>
+      <form id="formTutor">
+        <input type="hidden" name="id" />
+        <div class="campo"><label>Nome completo <span class="obrig">*</span></label><input name="nome" required /></div>
+        <div class="campo-duplo">
+          <div class="campo"><label>CPF <span class="obrig">*</span></label><input name="cpf" placeholder="000.000.000-00" required /></div>
+          <div class="campo"><label>Telefone <span class="obrig">*</span></label><input name="telefone" placeholder="(11) 90000-0000" required /></div>
+        </div>
+        <div class="campo"><label>E-mail</label><input name="email" type="email" /></div>
+        <div class="campo"><label>Endereço <span class="obrig">*</span></label><input name="endereco" required /></div>
+        <div class="campo"><label>Contato de emergência</label><input name="emergencia" placeholder="(11) 90000-0000" /></div>
+        <div class="modal-acoes">
+          <button type="button" class="btn btn--contorno" data-fechar>Cancelar</button>
+          <button type="submit" class="btn btn--primario">Salvar tutor</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== MODAL PET ===== -->
+  <div class="modal-fundo" id="modalPet">
+    <div class="modal">
+      <div class="modal__cab">
+        <div><h2 id="tituloModalPet">Novo paciente</h2><p>Cadastro do pet</p></div>
+        <button class="fechar-modal" data-fechar>&times;</button>
+      </div>
+      <form id="formPet">
+        <input type="hidden" name="id" />
+        <div class="campo"><label>Tutor responsável <span class="obrig">*</span></label>
+          <select name="tutorId" id="selectTutorPet" required><option value="">Selecione o tutor...</option></select>
+        </div>
+        <div class="campo-duplo">
+          <div class="campo"><label>Nome do pet <span class="obrig">*</span></label><input name="nome" required /></div>
+          <div class="campo"><label>Espécie <span class="obrig">*</span></label>
+            <select name="especie" required><option value="">Selecione...</option><option>Canino</option><option>Felino</option><option>Ave</option><option>Roedor</option><option>Réptil</option><option>Outro</option></select>
+          </div>
+        </div>
+        <div class="campo-duplo">
+          <div class="campo"><label>Raça</label><input name="raca" placeholder="Ex.: Dachshund, Siamês, SRD" /></div>
+          <div class="campo"><label>Porte <span class="obrig">*</span></label>
+            <select name="porte" required><option value="">Selecione...</option><option>Pequeno</option><option>Médio</option><option>Grande</option><option>Gigante</option></select>
+          </div>
+        </div>
+        <div class="campo"><label>Data de nascimento</label><input name="nascimento" type="date" />
+          <p class="dica-campo">A idade é calculada automaticamente a partir da data.</p>
+        </div>
+        <div class="campo"><label>Alergias <span class="obrig">*</span></label>
+          <textarea name="alergias" required placeholder="Descreva alergias conhecidas (vital para medicação e escolha de shampoos)."></textarea>
+        </div>
+        <div class="campo"><label>Condições preexistentes <span class="obrig">*</span></label>
+          <textarea name="condicoes" required placeholder="Doenças crônicas, cirurgias, restrições, etc."></textarea>
+        </div>
+        <div class="modal-acoes">
+          <button type="button" class="btn btn--contorno" data-fechar>Cancelar</button>
+          <button type="submit" class="btn btn--primario">Salvar paciente</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== MODAL INSUMO ===== -->
+  <div class="modal-fundo" id="modalInsumo">
+    <div class="modal">
+      <div class="modal__cab">
+        <div><h2 id="tituloModalInsumo">Novo insumo</h2><p>Cadastro de item de estoque</p></div>
+        <button class="fechar-modal" data-fechar>&times;</button>
+      </div>
+      <form id="formInsumo">
+        <input type="hidden" name="id" />
+        <div class="campo"><label>Nome do item <span class="obrig">*</span></label><input name="nome" required placeholder="Ex.: Luvas de procedimento (M)" /></div>
+        <div class="campo-duplo">
+          <div class="campo"><label>Categoria <span class="obrig">*</span></label>
+            <select name="categoria" required><option value="">Selecione...</option><option>Medicação</option><option>Material/Ferramenta</option><option>Descartável/EPI</option><option>Higiene</option><option>Outro</option></select>
+          </div>
+          <div class="campo"><label>Unidade <span class="obrig">*</span></label>
+            <select name="unidade" required><option value="">Selecione...</option><option>unidade</option><option>caixa</option><option>frasco</option><option>comprimido</option><option>ampola</option><option>par</option><option>pacote</option><option>ml</option><option>kg</option></select>
+          </div>
+        </div>
+        <div class="campo-duplo">
+          <div class="campo"><label>Quantidade atual <span class="obrig">*</span></label><input name="quantidade" type="number" min="0" step="1" required placeholder="0" /></div>
+          <div class="campo"><label>Estoque mínimo <span class="obrig">*</span></label><input name="minimo" type="number" min="0" step="1" required placeholder="0" />
+            <p class="dica-campo">Abaixo desse valor, o item alerta estoque baixo.</p>
+          </div>
+        </div>
+        <div class="campo"><label>Validade <span style="color:var(--cinza); font-weight:400">(quando aplicável)</span></label><input name="validade" type="date" />
+          <p class="dica-campo">Importante para medicações e vacinas.</p>
+        </div>
+        <div class="campo"><label>Observações</label><textarea name="observacao" placeholder="Lote, condições de armazenamento, fornecedor..."></textarea></div>
+        <div class="modal-acoes">
+          <button type="button" class="btn btn--contorno" data-fechar>Cancelar</button>
+          <button type="submit" class="btn btn--primario">Salvar insumo</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== MODAL LANÇAMENTO DE CAIXA ===== -->
+  <div class="modal-fundo" id="modalCaixa">
+    <div class="modal">
+      <div class="modal__cab">
+        <div><h2 id="tituloModalCaixa">Novo lançamento</h2><p>Movimentação de caixa</p></div>
+        <button class="fechar-modal" data-fechar>&times;</button>
+      </div>
+      <form id="formCaixa">
+        <input type="hidden" name="id" />
+        <div class="campo"><label>Setor <span class="obrig">*</span></label>
+          <select name="setor" required><option value="">Selecione o setor...</option><option>Clínica Veterinária</option><option>Banho e Tosa</option></select>
+        </div>
+        <div class="campo-duplo">
+          <div class="campo"><label>Tipo <span class="obrig">*</span></label>
+            <select name="tipo" required><option value="">Selecione...</option><option>Entrada</option><option>Saída</option></select>
+          </div>
+          <div class="campo"><label>Categoria <span class="obrig">*</span></label>
+            <select name="categoria" required>
+              <option value="">Selecione...</option>
+              <optgroup label="Entradas"><option>Consultas</option><option>Banho e Tosa</option><option>Vendas</option><option>Vacinas</option><option>Outras receitas</option></optgroup>
+              <optgroup label="Saídas"><option>Fornecedores</option><option>Salários</option><option>Aluguel</option><option>Energia/Água</option><option>Impostos</option><option>Manutenção</option><option>Outras despesas</option></optgroup>
+            </select>
+          </div>
+        </div>
+        <div class="campo"><label>Descrição <span class="obrig">*</span></label><input name="descricao" required placeholder="Ex.: Atendimentos do dia" /></div>
+        <div class="campo-duplo">
+          <div class="campo"><label>Valor (R$) <span class="obrig">*</span></label><input name="valor" type="number" step="0.01" min="0" required placeholder="0,00" /></div>
+          <div class="campo"><label>Data <span class="obrig">*</span></label><input name="data" type="date" required /></div>
+        </div>
+        <div class="campo-duplo">
+          <div class="campo"><label>Forma de pagamento <span class="obrig">*</span></label>
+            <select name="forma" required><option value="">Selecione...</option><option>Dinheiro</option><option>PIX</option><option>Cartão</option><option>Boleto</option><option>Transferência</option></select>
+          </div>
+          <div class="campo"><label>Status <span class="obrig">*</span></label>
+            <select name="status" required><option>Pago</option><option>Pendente</option></select>
+            <p class="dica-campo">Apenas lançamentos "Pago" entram no saldo do caixa.</p>
+          </div>
+        </div>
+        <div class="modal-acoes">
+          <button type="button" class="btn btn--contorno" data-fechar>Cancelar</button>
+          <button type="submit" class="btn btn--primario">Salvar lançamento</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== MODAL NOTA FISCAL ===== -->
+  <div class="modal-fundo" id="modalNota">
+    <div class="modal modal--largo">
+      <div class="modal__cab">
+        <div><h2 id="tituloModalNota">Nova nota fiscal</h2><p>Lançamento de nota fiscal / boleto</p></div>
+        <button class="fechar-modal" data-fechar>&times;</button>
+      </div>
+      <form id="formNota">
+        <input type="hidden" name="id" />
+        <div class="campo"><label>Setor <span class="obrig">*</span></label>
+          <select name="setor" required><option value="">Selecione o setor...</option><option>Clínica Veterinária</option><option>Banho e Tosa</option></select>
+        </div>
+        <div class="campo-duplo">
+          <div class="campo"><label>Número da nota <span class="obrig">*</span></label><input name="numero" required placeholder="Ex.: 000127" /></div>
+          <div class="campo"><label>Tipo <span class="obrig">*</span></label>
+            <select name="tipo" required><option value="">Selecione...</option><option>Entrada</option><option>Saída</option></select>
+            <p class="dica-campo">Entrada = nota a receber · Saída = nota a pagar.</p>
+          </div>
+        </div>
+        <div class="campo"><label>Descrição da nota <span class="obrig">*</span></label><textarea name="descricao" required placeholder="Descrição dos produtos/serviços da nota"></textarea></div>
+        <div class="campo-duplo">
+          <div class="campo"><label>Cliente / Fornecedor <span class="obrig">*</span></label><input name="parte" required placeholder="Nome da empresa ou pessoa" /></div>
+          <div class="campo"><label>Valor (R$) <span class="obrig">*</span></label><input name="valor" type="number" step="0.01" min="0" required placeholder="0,00" /></div>
+        </div>
+        <div class="campo-duplo">
+          <div class="campo"><label>Data de emissão <span class="obrig">*</span></label><input name="dataEmissao" type="date" required /></div>
+          <div class="campo"><label>Data de pagamento / vencimento</label><input name="dataPagamento" type="date" /></div>
+        </div>
+        <div class="campo"><label>Boleto (linha digitável)</label><input name="boleto" placeholder="00000.00000 00000.000000 00000.000000 0 00000000000000" /></div>
+        <div class="campo"><label>Status <span class="obrig">*</span></label>
+          <select name="status" required><option>Pendente</option><option>Pago</option></select>
+        </div>
+        <div class="modal-acoes">
+          <button type="button" class="btn btn--contorno" data-fechar>Cancelar</button>
+          <button type="submit" class="btn btn--primario">Salvar nota fiscal</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== MODAL PRONTUÁRIO ===== -->
+  <div class="modal-fundo" id="modalProntuario">
+    <div class="modal modal--largo">
+      <div class="modal__cab">
+        <div><h2 id="tituloProntuario">Prontuário</h2><p id="subProntuario"></p></div>
+        <button class="fechar-modal" data-fechar>&times;</button>
+      </div>
+
+      <div class="alerta-clinico" id="alertaClinico">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <div id="alertaClinicoTexto"></div>
+      </div>
+
+      <div class="ficha-bloco" id="fichaPet"></div>
+
+      <h3 style="margin:18px 0 12px; font-size:1.05rem">Nova entrada no histórico clínico</h3>
+      <form id="formProntuario">
+        <input type="hidden" name="petId" />
+        <div class="campo"><label>Anamnese / Queixa <span class="obrig">*</span></label>
+          <textarea name="anamnese" required placeholder="Motivo da consulta, sintomas relatados, observações do exame..."></textarea>
+        </div>
+        <div class="campo-duplo">
+          <div class="campo"><label>Peso (kg)</label><input name="peso" type="number" step="0.01" placeholder="0,00" /></div>
+          <div class="campo"><label>Vacinas aplicadas</label><input name="vacinas" placeholder="Ex.: V10, Antirrábica" /></div>
+        </div>
+        <div class="campo"><label>Exames / Anexos</label><input name="exames" placeholder="Ex.: Hemograma, Raio-X (descrição ou nome do arquivo)" />
+          <p class="dica-campo">No protótipo, registramos a descrição. No sistema real haveria upload de arquivos.</p>
+        </div>
+        <div class="campo"><label>Prescrição médica</label><textarea name="prescricao" placeholder="Medicamentos, dosagens e orientações."></textarea></div>
+        <div class="modal-acoes">
+          <button type="button" class="btn btn--contorno" data-fechar>Fechar</button>
+          <button type="submit" class="btn btn--primario">Registrar no prontuário</button>
+        </div>
+      </form>
+
+      <h3 style="margin:24px 0 12px; font-size:1.05rem">Histórico de atendimentos</h3>
+      <div id="historicoProntuario"></div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="js/tema.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/painel.js"></script>
+</body>
+</html>

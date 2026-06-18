@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cia Pet — Clínica Veterinária, Banho e Tosa</title>
+  <meta name="description" content="Cia Pet: clínica veterinária completa, banho e tosa. Cuidado, saúde e carinho para o seu melhor amigo." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐾</text></svg>" />
+</head>
+<body>
+  <div class="faixa-demo">🔧 Versão de demonstração — os dados ficam salvos apenas no seu navegador (protótipo).</div>
+
+  <!-- ================= CABEÇALHO ================= -->
+  <header class="cabecalho">
+    <div class="container cabecalho__inner">
+      <a href="index.html" class="logo">
+        <span class="logo__icone">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-9.5-9.2C1 8 3 5 6 5c2 0 3.2 1.2 4 2.4C10.8 6.2 12 5 14 5c3 0 5 3 3.5 6.8C19.5 16.4 12 21 12 21z"/></svg>
+        </span>
+        <span class="logo__texto">Cia Pet<small>Clínica · Banho & Tosa</small></span>
+      </a>
+      <nav class="nav">
+        <ul class="nav__menu" id="menu">
+          <li><a href="#inicio">Início</a></li>
+          <li><a href="#sobre">Sobre Nós</a></li>
+          <li><a href="#identidade">Identidade</a></li>
+          <li><a href="#agendamento">Agendamento</a></li>
+          <li><a href="login.html" class="btn btn--contorno btn--pequeno">🔒 Área Restrita</a></li>
+        </ul>
+        <button class="btn-tema" id="btnTema" title="Mudar tema"></button>
+        <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ================= HERO ================= -->
+  <section class="hero" id="inicio">
+    <div class="container hero__grid">
+      <div>
+        <span class="olho">Cuidando de quem você ama</span>
+        <h1>Saúde e bem-estar para o seu <span>melhor amigo</span></h1>
+        <p>Clínica veterinária completa, banho e tosa com profissionais apaixonados por animais. Agende em poucos cliques e cuide do seu pet com quem entende do assunto.</p>
+        <div class="hero__acoes">
+          <a href="#agendamento" class="btn btn--laranja">📅 Agendar agora</a>
+          <a href="#sobre" class="btn btn--contorno">Conheça a clínica</a>
+        </div>
+        <div class="hero__selos">
+          <div class="selo"><b>+12</b><span>anos de história</span></div>
+          <div class="selo"><b>+8 mil</b><span>pets atendidos</span></div>
+          <div class="selo"><b>2 setores</b><span>Clínica e Estética</span></div>
+        </div>
+      </div>
+      <div class="hero__arte">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.5 9.5a2 2 0 11.001-4.001A2 2 0 014.5 9.5zm5-2a2 2 0 11.001-4.001A2 2 0 019.5 7.5zm5 0a2 2 0 11.001-4.001A2 2 0 0114.5 7.5zm5 2a2 2 0 11.001-4.001A2 2 0 0119.5 9.5zM12 11c-2.5 0-6 2.8-6 5.5 0 1.7 1.3 2.5 2.8 2.5 1 0 2-.4 3.2-.4s2.2.4 3.2.4c1.5 0 2.8-.8 2.8-2.5C18 13.8 14.5 11 12 11z"/></svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SERVIÇOS (resumo) ================= -->
+  <section class="secao">
+    <div class="container">
+      <div class="centro">
+        <span class="olho">Nossos serviços</span>
+        <h2 class="titulo-secao">Tudo o que o seu pet precisa em um só lugar</h2>
+        <p class="subtitulo-secao">Da consulta de rotina ao banho relaxante, oferecemos cuidado completo com estrutura e carinho.</p>
+      </div>
+      <div class="grid grid-3" style="margin-top:46px">
+        <div class="card">
+          <div class="card__icone"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 14c1.5-1.5 3-3.3 3-5.5A4.5 4.5 0 0012 5.5 4.5 4.5 0 002 8.5c0 2.2 1.5 4 3 5.5l7 7 7-7z"/></svg></div>
+          <h3>Clínica Veterinária</h3>
+          <p>Consultas, vacinas, exames, prescrições e acompanhamento clínico com prontuário completo.</p>
+        </div>
+        <div class="card">
+          <div class="card__icone card__icone--laranja"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M12 3v18"/><circle cx="12" cy="12" r="9"/></svg></div>
+          <h3>Banho & Tosa</h3>
+          <p>Estética animal com produtos adequados a cada pelagem, porte e necessidade — inclusive peles sensíveis.</p>
+        </div>
+        <div class="card">
+          <div class="card__icone"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/><circle cx="12" cy="12" r="4"/></svg></div>
+          <h3>Atendimento humanizado</h3>
+          <p>Equipe que trata cada animal com respeito e cada tutor com transparência e atenção.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SOBRE NÓS ================= -->
+  <section class="secao secao--cinza" id="sobre">
+    <div class="container sobre__grid">
+      <div class="sobre__arte">
+        <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="#2a9d78" stroke-width="1.4"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <div class="ano"><b>2013</b><span>Ano de fundação</span></div>
+      </div>
+      <div>
+        <span class="olho">Sobre Nós</span>
+        <h2 class="titulo-secao">Nossa história e fundação</h2>
+        <p class="subtitulo-secao" style="margin-bottom:14px">
+          A <strong>Cia Pet</strong> nasceu em <strong>2013</strong>, do sonho do médico veterinário
+          <strong>Dr. Ighor Morales</strong>, que uniu experiência
+          clínica e paixão pelos animais para criar um espaço de cuidado de verdade.
+        </p>
+        <p class="subtitulo-secao">
+          O que começou como um pequeno consultório de bairro cresceu e se tornou uma clínica completa,
+          com setor de estética (banho e tosa) e uma equipe dedicada. Em mais de uma década, já cuidamos
+          de milhares de pets, sempre com o mesmo princípio: tratar cada animal como se fosse nosso.
+        </p>
+        <ul class="lista-check">
+          <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Estrutura própria para clínica e estética</li>
+          <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Equipe formada e em constante atualização</li>
+          <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Histórico clínico digital de cada paciente</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= IDENTIDADE ORGANIZACIONAL ================= -->
+  <section class="secao" id="identidade">
+    <div class="container">
+      <div class="centro">
+        <span class="olho">Identidade Organizacional</span>
+        <h2 class="titulo-secao">Visão, Missão e Valores</h2>
+        <p class="subtitulo-secao">Os princípios que guiam cada atendimento na Cia Pet.</p>
+      </div>
+      <div class="grid grid-3" style="margin-top:46px">
+        <div class="card">
+          <div class="card__icone"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
+          <h3>Visão</h3>
+          <p>Ser reconhecida como referência regional em medicina veterinária e estética animal, unindo tecnologia, ética e acolhimento como padrão de cuidado.</p>
+        </div>
+        <div class="card">
+          <div class="card__icone card__icone--laranja"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg></div>
+          <h3>Missão e Metas</h3>
+          <p>Promover saúde, bem-estar e qualidade de vida aos animais por meio de um atendimento responsável, ágil e humano — buscando excelência contínua nos serviços de clínica e estética.</p>
+        </div>
+        <div class="card">
+          <div class="card__icone"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7.5-4.6-9.5-9.2C1 8 3 5 6 5c2 0 3.2 1.2 4 2.4C10.8 6.2 12 5 14 5c3 0 5 3 3.5 6.8C19.5 16.4 12 21 12 21z"/></svg></div>
+          <h3>Valores</h3>
+          <p>Ética e respeito à vida animal · Compromisso com o bem-estar · Transparência total com os tutores · Empatia · Responsabilidade e atualização profissional.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= AGENDAMENTO / CONTATO (PARTE 2) ================= -->
+  <section class="secao secao--cinza" id="agendamento">
+    <div class="container">
+      <div class="centro">
+        <span class="olho">Agendamento & Contato</span>
+        <h2 class="titulo-secao">Agende a visita do seu pet</h2>
+        <p class="subtitulo-secao">Preencha o formulário e nossa recepção entrará em contato para confirmar. Você também pode falar conosco diretamente.</p>
+      </div>
+
+      <div class="contato__grid" style="margin-top:46px">
+        <!-- Contato -->
+        <div>
+          <div class="contato-item">
+            <span class="contato-item__icone"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3 19.5 19.5 0 01-6-6 19.8 19.8 0 01-3-8.6A2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.3 1.8.6 2.6a2 2 0 01-.5 2.1L8 9.6a16 16 0 006 6l1.2-1.2a2 2 0 012.1-.5c.8.3 1.7.5 2.6.6a2 2 0 011.7 2z"/></svg></span>
+            <div><h4>Telefone & WhatsApp</h4><p>(11) 3000-1234</p><a href="https://wa.me/5511999990000" target="_blank">💬 Chamar no WhatsApp →</a></div>
+          </div>
+          <div class="contato-item">
+            <span class="contato-item__icone"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 6L2 7"/></svg></span>
+            <div><h4>E-mail</h4><a href="mailto:contato@ciapet.com.br">contato@ciapet.com.br</a></div>
+          </div>
+          <div class="contato-item">
+            <span class="contato-item__icone"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+            <div><h4>Endereço</h4><p>Av. dos Animais, 1234 — Centro<br>Lençóis Paulista / SP — CEP 18680-000</p></div>
+          </div>
+          <div class="contato-item">
+            <span class="contato-item__icone"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+            <div><h4>Horário de funcionamento</h4><p>Seg a Sex: 08h às 12h e 13h30 às 18h<br>Sáb: 08h às 12h</p></div>
+          </div>
+          <div class="mapa">
+            <iframe title="Mapa Cia Pet — Lençóis Paulista/SP" loading="lazy" src="https://www.openstreetmap.org/export/embed.html?bbox=-48.815%2C-22.610%2C-48.785%2C-22.588&layer=mapnik&marker=-22.599%2C-48.800"></iframe>
+          </div>
+        </div>
+
+        <!-- Formulário -->
+        <div class="form-card">
+          <h3 style="margin-bottom:6px">Formulário de agendamento</h3>
+          <p style="color:var(--cinza); font-size:.92rem; margin-bottom:20px">Campos com <span style="color:var(--erro)">*</span> são obrigatórios.</p>
+
+          <div class="alerta alerta--ok" id="alertaOk">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <span id="alertaOkTexto"></span>
+          </div>
+          <div class="alerta alerta--erro" id="alertaErro">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span id="alertaErroTexto"></span>
+          </div>
+
+          <form id="formAgendamento" novalidate>
+            <div class="campo-duplo">
+              <div class="campo">
+                <label>Nome do tutor <span class="obrig">*</span></label>
+                <input type="text" name="tutorNome" placeholder="Seu nome completo" required />
+              </div>
+              <div class="campo">
+                <label>Telefone de contato <span class="obrig">*</span></label>
+                <input type="tel" name="tutorTelefone" placeholder="(11) 90000-0000" required />
+              </div>
+            </div>
+            <div class="campo">
+              <label>Nome do paciente (pet) <span class="obrig">*</span></label>
+              <input type="text" name="petNome" placeholder="Nome do seu animal" required />
+            </div>
+            <div class="campo">
+              <label>Setor desejado <span class="obrig">*</span></label>
+              <select name="setor" required>
+                <option value="">Selecione o setor...</option>
+                <option>Clínica Veterinária</option>
+                <option>Estética (Banho/Tosa)</option>
+              </select>
+            </div>
+            <div class="campo-duplo">
+              <div class="campo">
+                <label>Data desejada <span class="obrig">*</span></label>
+                <input type="date" name="data" required />
+              </div>
+              <div class="campo">
+                <label>Turno / horário <span class="obrig">*</span></label>
+                <select name="turno" required>
+                  <option value="">Selecione...</option>
+                  <option>Manhã (08h–12h)</option>
+                  <option>Tarde (13h30–18h)</option>
+                </select>
+              </div>
+            </div>
+            <button type="submit" class="btn btn--laranja btn--bloco">📅 Solicitar agendamento</button>
+            <p class="dica-campo" style="text-align:center; margin-top:12px">Ao enviar, sua solicitação entra como <strong>Pendente</strong> e aguarda confirmação da recepção.</p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= RODAPÉ ================= -->
+  <footer class="rodape">
+    <div class="container">
+      <div class="rodape__grid">
+        <div class="rodape__sobre">
+          <div class="logo">
+            <span class="logo__icone"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-9.5-9.2C1 8 3 5 6 5c2 0 3.2 1.2 4 2.4C10.8 6.2 12 5 14 5c3 0 5 3 3.5 6.8C19.5 16.4 12 21 12 21z"/></svg></span>
+            <span class="logo__texto">Cia Pet<small>Clínica · Banho & Tosa</small></span>
+          </div>
+          <p>Cuidado, saúde e carinho para o seu melhor amigo desde 2013.</p>
+          <div class="redes">
+            <a href="#" aria-label="Instagram"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
+            <a href="#" aria-label="Facebook"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></a>
+            <a href="https://wa.me/5511999990000" aria-label="WhatsApp"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 00-8.6 15l-1.4 5 5.1-1.3A10 10 0 1012 2zm0 2a8 8 0 11-4.2 14.8l-.3-.2-2.9.8.8-2.8-.2-.3A8 8 0 0112 4zm4.5 9.8c-.2-.1-1.4-.7-1.6-.8s-.4-.1-.5.1-.6.8-.7.9-.3.2-.5.1a6.5 6.5 0 01-3.2-2.8c-.2-.4.2-.4.6-1.2.1-.1 0-.3 0-.4l-.7-1.7c-.2-.4-.4-.4-.5-.4h-.5a1 1 0 00-.7.3c-.3.3-1 .9-1 2.2s1 2.6 1.1 2.8a9.4 9.4 0 003.6 3.2c1.3.6 1.8.6 2.5.5.4 0 1.4-.5 1.6-1.1.2-.5.2-1 .1-1.1z"/></svg></a>
+          </div>
+        </div>
+        <div>
+          <h4>Navegação</h4>
+          <a href="#inicio">Início</a>
+          <a href="#sobre">Sobre Nós</a>
+          <a href="#identidade">Identidade</a>
+          <a href="#agendamento">Agendamento</a>
+        </div>
+        <div>
+          <h4>Serviços</h4>
+          <a href="#agendamento">Clínica Veterinária</a>
+          <a href="#agendamento">Banho & Tosa</a>
+          <a href="login.html">Área Restrita</a>
+        </div>
+        <div class="rodape__contato">
+          <h4>Contato</h4>
+          <p>📍 Av. dos Animais, 1234 — Lençóis Paulista/SP</p>
+          <p>📞 (11) 3000-1234</p>
+          <p>✉️ contato@ciapet.com.br</p>
+          <p>🕐 Seg–Sex 08h–12h e 13h30–18h · Sáb 08h–12h</p>
+        </div>
+      </div>
+      <div class="rodape__base">
+        <span>CNPJ: 12.345.678/0001-90 · Cia Pet Clínica Veterinária Ltda.</span>
+        <span>© 2026 Cia Pet — Todos os direitos reservados.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/tema.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
