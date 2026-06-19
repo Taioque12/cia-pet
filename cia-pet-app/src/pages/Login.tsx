@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { useHistory } from 'react-router-dom';
+import { IonPage } from '@ionic/react';
 import { supabase } from '../lib/supabase';
 import '../site.css';
 
@@ -24,6 +25,7 @@ export default function Login() {
   }
 
   return (
+    <IonPage>
     <div className="sp-root" style={{ minHeight: '100vh', display: 'flex' }}>
       {/* Lado esquerdo — branding */}
       <div style={{
@@ -217,5 +219,6 @@ export default function Login() {
         }
       `}</style>
     </div>
+    </IonPage>
   );
 }
