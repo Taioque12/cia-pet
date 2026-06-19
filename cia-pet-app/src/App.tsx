@@ -12,6 +12,7 @@ import Prontuarios from './pages/Prontuarios';
 import Tutores from './pages/Tutores';
 import Estoque from './pages/Estoque';
 import Financeiro from './pages/Financeiro';
+import Usuarios from './pages/Usuarios';
 
 function AdminRoute({ component: Component, session, ...rest }: any) {
   return (
@@ -50,6 +51,7 @@ function AppContent() {
         <AdminRoute path="/tutores" component={Tutores} session={session} exact />
         <AdminRoute path="/estoque" component={Estoque} session={session} exact />
         <AdminRoute path="/financeiro" component={Financeiro} session={session} exact />
+        <AdminRoute path="/usuarios" component={Usuarios} session={session} exact />
         <Route render={() => <Redirect to={session ? '/dashboard' : '/'} />} />
       </IonRouterOutlet>
     </IonSplitPane>

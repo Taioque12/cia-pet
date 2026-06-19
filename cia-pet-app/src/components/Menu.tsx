@@ -9,6 +9,7 @@ const paginas = [
   { titulo: 'Tutores',       url: '/tutores',     emoji: '👥' },
   { titulo: 'Estoque',       url: '/estoque',     emoji: '📦' },
   { titulo: 'Financeiro',    url: '/financeiro',  emoji: '💰' },
+  { titulo: 'Usuários',      url: '/usuarios',    emoji: '🔑' },
 ];
 
 export default function Menu() {
