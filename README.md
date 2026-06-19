@@ -40,6 +40,6 @@ Os scripts em `backend/` criam toda a estrutura no Supabase:
 
 - [x] Backend (Supabase) — 8 tabelas + autenticação
 - [x] Painel: Dashboard, Agendamentos, Pacientes, Tutores
-- [ ] Painel: Prontuários, Estoque, Financeiro
-- [ ] Site público + agendamento
-- [ ] Empacotamento como app (PWA / Capacitor)
+- [x] Painel: Estoque, Financeiro, Usuários
+- [x] Site público + agendamento (com email + Google Agenda)
+- [x] Empacotamento como app (Capacitor — projeto Android gerado)
