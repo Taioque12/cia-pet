@@ -57,6 +57,21 @@ create table if not exists prontuarios (
   criado_em       timestamptz not null default now()
 );
 
+-- ---------- VACINAS (controle de vacinação) ----------
+-- Padrao desnormalizado (igual agendamentos): guarda pet/tutor/telefone direto,
+-- para registrar a vacina sem exigir cadastro previo do pet.
+create table if not exists vacinas (
+  id              uuid primary key default gen_random_uuid(),
+  pet_nome        text not null,
+  tutor_nome      text not null,
+  tutor_telefone  text,
+  vacina          text not null,
+  data_aplicacao  date not null,
+  proxima_dose    date,
+  observacao      text,
+  criado_em       timestamptz not null default now()
+);
+
 -- ---------- AGENDAMENTOS ----------
 create table if not exists agendamentos (
   id              uuid primary key default gen_random_uuid(),
@@ -121,6 +136,7 @@ alter table funcionarios   enable row level security;
 alter table tutores        enable row level security;
 alter table pets           enable row level security;
 alter table prontuarios    enable row level security;
+alter table vacinas        enable row level security;
 alter table agendamentos   enable row level security;
 alter table insumos        enable row level security;
 alter table financeiro     enable row level security;
@@ -130,7 +146,7 @@ alter table notas_fiscais  enable row level security;
 do $$
 declare t text;
 begin
-  foreach t in array array['funcionarios','tutores','pets','prontuarios',
+  foreach t in array array['funcionarios','tutores','pets','prontuarios','vacinas',
                            'agendamentos','insumos','financeiro','notas_fiscais']
   loop
     execute format(

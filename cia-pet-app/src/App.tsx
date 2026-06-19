@@ -9,6 +9,7 @@ import Dashboard from './pages/Dashboard';
 import Agendamentos from './pages/Agendamentos';
 import Pacientes from './pages/Pacientes';
 import Prontuarios from './pages/Prontuarios';
+import Vacinas from './pages/Vacinas';
 import Tutores from './pages/Tutores';
 import Estoque from './pages/Estoque';
 import Financeiro from './pages/Financeiro';
@@ -48,6 +49,7 @@ function AppContent() {
         <AdminRoute path="/agendamentos" component={Agendamentos} session={session} exact />
         <AdminRoute path="/pacientes" component={Pacientes} session={session} exact />
         <AdminRoute path="/pacientes/:petId/prontuarios" component={Prontuarios} session={session} exact />
+        <AdminRoute path="/vacinas" component={Vacinas} session={session} exact />
         <AdminRoute path="/tutores" component={Tutores} session={session} exact />
         <AdminRoute path="/estoque" component={Estoque} session={session} exact />
         <AdminRoute path="/financeiro" component={Financeiro} session={session} exact />

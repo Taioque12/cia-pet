@@ -6,6 +6,7 @@ const paginas = [
   { titulo: 'Painel',        url: '/dashboard',   emoji: '📊' },
   { titulo: 'Agendamentos',  url: '/agendamentos',emoji: '📅' },
   { titulo: 'Pacientes',     url: '/pacientes',   emoji: '🐾' },
+  { titulo: 'Vacinas',       url: '/vacinas',     emoji: '💉' },
   { titulo: 'Tutores',       url: '/tutores',     emoji: '👥' },
   { titulo: 'Estoque',       url: '/estoque',     emoji: '📦' },
   { titulo: 'Financeiro',    url: '/financeiro',  emoji: '💰' },
