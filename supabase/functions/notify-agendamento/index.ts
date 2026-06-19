@@ -46,9 +46,11 @@ function linkGoogleAgenda(ag: any): string {
 serve(async (req) => {
   try {
     const payload = await req.json();
-    const ag = payload.record;
+    // Aceita tanto o formato de webhook ({ record: {...} }) quanto a linha crua
+    // enviada pelo trigger do banco (row_to_json(NEW)).
+    const ag = payload?.record ?? payload;
 
-    if (!ag) {
+    if (!ag || !ag.pet_nome || !ag.data) {
       return new Response('Sem dados', { status: 400 });
     }
 
