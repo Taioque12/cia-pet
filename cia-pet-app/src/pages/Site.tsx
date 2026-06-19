@@ -187,9 +187,9 @@ export default function Site() {
             {/* Info de contato */}
             <div>
               {[
-                { titulo: 'Telefone & WhatsApp', conteudo: <><p>(14) 99999-0000</p><a href="https://wa.me/5514999990000" target="_blank" rel="noreferrer">💬 Chamar no WhatsApp →</a></>, icone: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3 19.5 19.5 0 01-6-6 19.8 19.8 0 01-3-8.6A2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.3 1.8.6 2.6a2 2 0 01-.5 2.1L8 9.6a16 16 0 006 6l1.2-1.2a2 2 0 012.1-.5c.8.3 1.7.5 2.6.6a2 2 0 011.7 2z"/></svg> },
+                { titulo: 'Telefone & WhatsApp', conteudo: <><p>(14) 3264-7135</p><a href="https://wa.me/551432647135" target="_blank" rel="noreferrer">💬 Chamar no WhatsApp →</a></>, icone: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3 19.5 19.5 0 01-6-6 19.8 19.8 0 01-3-8.6A2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.3 1.8.6 2.6a2 2 0 01-.5 2.1L8 9.6a16 16 0 006 6l1.2-1.2a2 2 0 012.1-.5c.8.3 1.7.5 2.6.6a2 2 0 011.7 2z"/></svg> },
                 { titulo: 'E-mail', conteudo: <a href="mailto:contato@ciapet.com.br">contato@ciapet.com.br</a>, icone: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 6L2 7"/></svg> },
-                { titulo: 'Endereço', conteudo: <p>Rua Exemplo, 123 — Centro<br/>Lençóis Paulista / SP</p>, icone: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg> },
+                { titulo: 'Endereço', conteudo: <p>R. Rio Grande do Sul — Jardim Cruzeiro<br/>Lençóis Paulista / SP · CEP 18680-550</p>, icone: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg> },
                 { titulo: 'Horário de funcionamento', conteudo: <p>Seg a Sex: 08h às 12h e 13h30 às 18h<br/>Sáb: 08h às 12h</p>, icone: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> },
               ].map((item) => (
                 <div key={item.titulo} className="sp-contato-item">
@@ -198,7 +198,7 @@ export default function Site() {
                 </div>
               ))}
               <div className="sp-mapa">
-                <iframe title="Mapa Cia Pet" loading="lazy" src="https://www.openstreetmap.org/export/embed.html?bbox=-48.815%2C-22.610%2C-48.785%2C-22.588&layer=mapnik&marker=-22.599%2C-48.800" />
+                <iframe title="Mapa Cia Pet" loading="lazy" src="https://www.openstreetmap.org/export/embed.html?bbox=-48.810%2C-22.608%2C-48.788%2C-22.592&layer=mapnik&marker=-22.600%2C-48.797" />
               </div>
             </div>
 
@@ -289,8 +289,8 @@ export default function Site() {
             </div>
             <div>
               <h4>Contato</h4>
-              <a>📍 Rua Exemplo, 123 — Lençóis Paulista/SP</a>
-              <a href="tel:+5514999990000">📞 (14) 99999-0000</a>
+              <a>📍 R. Rio Grande do Sul — Jardim Cruzeiro, Lençóis Paulista/SP</a>
+              <a href="tel:+551432647135">📞 (14) 3264-7135</a>
               <a href="mailto:contato@ciapet.com.br">✉️ contato@ciapet.com.br</a>
               <a>🕐 Seg–Sex 08h–12h · 13h30–18h · Sáb 08h–12h</a>
             </div>
