@@ -2,11 +2,8 @@ import { useEffect, useState, type FormEvent } from 'react';
 import { useHistory } from 'react-router-dom';
 import {
   IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle,
-  IonToolbar, IonList, IonItem, IonLabel, IonSpinner, IonText, IonSearchbar,
-  IonBadge, IonButton, IonIcon, IonFab, IonFabButton, IonModal, IonInput,
-  IonTextarea, IonSelect, IonSelectOption,
+  IonToolbar, IonSpinner, IonModal,
 } from '@ionic/react';
-import { add, createOutline, trashOutline, close, documentTextOutline } from 'ionicons/icons';
 import { supabase } from '../lib/supabase';
 
 interface PetRow {
@@ -22,12 +19,31 @@ const VAZIO: Partial<PetRow> = {
   alergias: '', condicoes: '',
 };
 
+const ESPECIES: Record<string, string> = {
+  Canino: '🐶', Felino: '🐱', Ave: '🐦', Roedor: '🐹', Réptil: '🦎', Outro: '🐾',
+};
+
 function idade(nascimento: string | null): string {
   if (!nascimento) return '—';
   const n = new Date(nascimento), h = new Date();
   let anos = h.getFullYear() - n.getFullYear();
   if (h.getMonth() < n.getMonth() || (h.getMonth() === n.getMonth() && h.getDate() < n.getDate())) anos--;
   return anos <= 0 ? 'menos de 1 ano' : `${anos} ${anos === 1 ? 'ano' : 'anos'}`;
+}
+
+const inputStyle: React.CSSProperties = {
+  width: '100%', padding: '11px 14px', borderRadius: 10,
+  border: '1.5px solid #e4ece8', fontSize: '.95rem', color: '#1a2e27',
+  background: '#fff', boxSizing: 'border-box', fontFamily: 'inherit', outline: 'none',
+};
+
+function Campo({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div style={{ marginBottom: 16 }}>
+      <label style={{ display: 'block', fontSize: '.82rem', fontWeight: 600, color: '#1a2e27', marginBottom: 6 }}>{label}</label>
+      {children}
+    </div>
+  );
 }
 
 export default function Pacientes() {
@@ -93,72 +109,158 @@ export default function Pacientes() {
           <IonTitle>Pacientes</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="ion-padding">
-        <IonSearchbar placeholder="Buscar por nome, raça ou tutor..." value={busca} onIonInput={(e) => setBusca(e.detail.value ?? '')} />
-        {carregando ? (
-          <IonSpinner />
-        ) : filtrados.length === 0 ? (
-          <IonText color="medium"><p className="ion-padding">Nenhum paciente encontrado.</p></IonText>
-        ) : (
-          <IonList>
-            {filtrados.map((p) => (
-              <IonItem key={p.id}>
-                <IonLabel>
-                  <h2>{p.nome}</h2>
-                  <p>{p.especie}{p.raca ? ` · ${p.raca}` : ''} · {idade(p.nascimento)}</p>
-                  <p>Tutor: {p.tutores?.nome ?? '—'}</p>
-                </IonLabel>
-                {p.porte && <IonBadge color="secondary">{p.porte}</IonBadge>}
-                <IonButton fill="clear" color="medium" slot="end" title="Prontuários" onClick={() => history.push(`/pacientes/${p.id}/prontuarios`)}>
-                  <IonIcon slot="icon-only" icon={documentTextOutline} />
-                </IonButton>
-                <IonButton fill="clear" slot="end" onClick={() => { setForm(p); setAberto(true); }}>
-                  <IonIcon slot="icon-only" icon={createOutline} />
-                </IonButton>
-                <IonButton fill="clear" color="danger" slot="end" onClick={() => excluir(p)}>
-                  <IonIcon slot="icon-only" icon={trashOutline} />
-                </IonButton>
-              </IonItem>
-            ))}
-          </IonList>
-        )}
+      <IonContent style={{ '--background': '#f4f7f5' }}>
+        <div style={{ maxWidth: 900, margin: '0 auto', padding: '20px 16px' }}>
 
-        <IonFab slot="fixed" vertical="bottom" horizontal="end">
-          <IonFabButton onClick={() => { setForm(VAZIO); setAberto(true); }}>
-            <IonIcon icon={add} />
-          </IonFabButton>
-        </IonFab>
+          {/* Busca + botão */}
+          <div style={{ display: 'flex', gap: 12, marginBottom: 20 }}>
+            <input
+              placeholder="🔍 Buscar por nome, raça ou tutor..."
+              value={busca}
+              onChange={e => setBusca(e.target.value)}
+              style={{ ...inputStyle, flex: 1 }}
+            />
+            <button onClick={() => { setForm(VAZIO); setAberto(true); }} style={{
+              padding: '11px 20px', borderRadius: 10, border: 'none', cursor: 'pointer',
+              background: '#2a9d78', color: '#fff', fontWeight: 700, fontSize: '.9rem',
+              fontFamily: 'inherit', whiteSpace: 'nowrap',
+            }}>
+              + Novo paciente
+            </button>
+          </div>
 
+          {/* Lista */}
+          {carregando ? (
+            <div style={{ textAlign: 'center', padding: 40 }}><IonSpinner /></div>
+          ) : filtrados.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: 48, color: '#6b7f79' }}>
+              <div style={{ fontSize: 40, marginBottom: 12 }}>🐾</div>
+              <p style={{ margin: 0 }}>Nenhum paciente encontrado.</p>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {filtrados.map((p) => (
+                <div key={p.id} style={{
+                  background: '#fff', borderRadius: 14, padding: '16px 20px',
+                  boxShadow: '0 2px 12px rgba(0,0,0,.06)',
+                  display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap',
+                }}>
+                  {/* Avatar espécie */}
+                  <div style={{
+                    width: 48, height: 48, borderRadius: 12, background: '#e3f3eb',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: 24, flexShrink: 0,
+                  }}>
+                    {ESPECIES[p.especie] ?? '🐾'}
+                  </div>
+
+                  {/* Info */}
+                  <div style={{ flex: 1, minWidth: 160 }}>
+                    <div style={{ fontWeight: 700, color: '#1a2e27', fontSize: '.97rem', marginBottom: 3 }}>
+                      {p.nome}
+                      {p.porte && (
+                        <span style={{
+                          marginLeft: 8, fontSize: '.72rem', fontWeight: 600,
+                          background: '#f0f4f2', color: '#5f6f69',
+                          borderRadius: 6, padding: '2px 8px',
+                        }}>{p.porte}</span>
+                      )}
+                    </div>
+                    <div style={{ color: '#6b7f79', fontSize: '.82rem' }}>
+                      {p.especie}{p.raca ? ` · ${p.raca}` : ''} · {idade(p.nascimento)}
+                    </div>
+                    <div style={{ color: '#6b7f79', fontSize: '.78rem', marginTop: 2 }}>
+                      👤 {p.tutores?.nome ?? '—'}
+                    </div>
+                  </div>
+
+                  {/* Alertas */}
+                  {p.alergias && (
+                    <span style={{
+                      background: '#fff8ec', color: '#e07b39', border: '1px solid #fdd9b5',
+                      borderRadius: 8, padding: '4px 10px', fontSize: '.75rem', fontWeight: 600,
+                    }}>⚠️ Alergia</span>
+                  )}
+
+                  {/* Ações */}
+                  <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
+                    <button onClick={() => history.push(`/pacientes/${p.id}/prontuarios`)} style={{
+                      padding: '7px 14px', borderRadius: 8, border: '1.5px solid #eef0ff',
+                      background: '#eef0ff', color: '#5b6af5', cursor: 'pointer',
+                      fontSize: '.82rem', fontFamily: 'inherit', fontWeight: 600,
+                    }}>📋 Prontuários</button>
+                    <button onClick={() => { setForm(p); setAberto(true); }} style={{
+                      padding: '7px 14px', borderRadius: 8, border: '1.5px solid #e4ece8',
+                      background: '#fff', color: '#1a2e27', cursor: 'pointer',
+                      fontSize: '.82rem', fontFamily: 'inherit',
+                    }}>✏️</button>
+                    <button onClick={() => excluir(p)} style={{
+                      padding: '7px 14px', borderRadius: 8, border: '1.5px solid #fdecea',
+                      background: '#fdecea', color: '#d64545', cursor: 'pointer',
+                      fontSize: '.82rem', fontFamily: 'inherit',
+                    }}>🗑️</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Modal */}
         <IonModal isOpen={aberto} onDidDismiss={() => setAberto(false)}>
-          <IonHeader>
-            <IonToolbar color="primary">
-              <IonTitle>{form.id ? 'Editar paciente' : 'Novo paciente'}</IonTitle>
-              <IonButtons slot="end">
-                <IonButton onClick={() => setAberto(false)}><IonIcon slot="icon-only" icon={close} /></IonButton>
-              </IonButtons>
-            </IonToolbar>
-          </IonHeader>
-          <IonContent className="ion-padding">
-            <form onSubmit={salvar}>
-              <IonSelect className="ion-margin-bottom" label="Tutor responsável *" labelPlacement="stacked" placeholder="Selecione" value={form.tutor_id} onIonChange={(e) => set('tutor_id', e.detail.value)}>
-                {tutoresOpc.map((t) => <IonSelectOption key={t.id} value={t.id}>{t.nome}</IonSelectOption>)}
-              </IonSelect>
-              <IonInput className="ion-margin-bottom" label="Nome do pet *" labelPlacement="stacked" value={form.nome} onIonInput={(e) => set('nome', e.detail.value ?? '')} />
-              <IonSelect className="ion-margin-bottom" label="Espécie *" labelPlacement="stacked" placeholder="Selecione" value={form.especie} onIonChange={(e) => set('especie', e.detail.value)}>
-                {['Canino', 'Felino', 'Ave', 'Roedor', 'Réptil', 'Outro'].map((x) => <IonSelectOption key={x} value={x}>{x}</IonSelectOption>)}
-              </IonSelect>
-              <IonInput className="ion-margin-bottom" label="Raça" labelPlacement="stacked" placeholder="Ex.: Dachshund, Siamês, SRD" value={form.raca ?? ''} onIonInput={(e) => set('raca', e.detail.value ?? '')} />
-              <IonSelect className="ion-margin-bottom" label="Porte" labelPlacement="stacked" placeholder="Selecione" value={form.porte ?? ''} onIonChange={(e) => set('porte', e.detail.value)}>
-                {['Pequeno', 'Médio', 'Grande', 'Gigante'].map((x) => <IonSelectOption key={x} value={x}>{x}</IonSelectOption>)}
-              </IonSelect>
-              <IonInput className="ion-margin-bottom" label="Data de nascimento" labelPlacement="stacked" type="date" value={form.nascimento ?? ''} onIonInput={(e) => set('nascimento', e.detail.value ?? '')} />
-              <IonTextarea className="ion-margin-bottom" label="Alergias" labelPlacement="stacked" autoGrow placeholder="Vital para medicação e escolha de shampoos" value={form.alergias ?? ''} onIonInput={(e) => set('alergias', e.detail.value ?? '')} />
-              <IonTextarea className="ion-margin-bottom" label="Condições preexistentes" labelPlacement="stacked" autoGrow value={form.condicoes ?? ''} onIonInput={(e) => set('condicoes', e.detail.value ?? '')} />
-              <IonButton type="submit" expand="block" className="ion-margin-top" disabled={salvando}>
-                {salvando ? <IonSpinner name="crescent" /> : 'Salvar paciente'}
-              </IonButton>
-            </form>
-          </IonContent>
+          <div style={{ height: '100%', background: '#f4f7f5', display: 'flex', flexDirection: 'column' }}>
+            <div style={{ background: 'linear-gradient(135deg,#1c6f54,#2a9d78)', padding: '20px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <h2 style={{ color: '#fff', margin: 0, fontSize: '1.1rem', fontWeight: 800 }}>
+                {form.id ? '✏️ Editar paciente' : '🐾 Novo paciente'}
+              </h2>
+              <button onClick={() => setAberto(false)} style={{ background: 'rgba(255,255,255,.2)', border: 'none', borderRadius: 8, color: '#fff', padding: '6px 12px', cursor: 'pointer', fontSize: '1rem' }}>✕</button>
+            </div>
+            <div style={{ flex: 1, overflowY: 'auto', padding: '24px' }}>
+              <form onSubmit={salvar}>
+                <Campo label="Tutor responsável *">
+                  <select style={inputStyle} value={form.tutor_id ?? ''} onChange={e => set('tutor_id', e.target.value)}>
+                    <option value="">Selecione o tutor...</option>
+                    {tutoresOpc.map((t) => <option key={t.id} value={t.id}>{t.nome}</option>)}
+                  </select>
+                </Campo>
+                <Campo label="Nome do pet *">
+                  <input style={inputStyle} value={form.nome ?? ''} onChange={e => set('nome', e.target.value)} placeholder="Nome do animal" />
+                </Campo>
+                <Campo label="Espécie *">
+                  <select style={inputStyle} value={form.especie ?? ''} onChange={e => set('especie', e.target.value)}>
+                    <option value="">Selecione a espécie...</option>
+                    {Object.keys(ESPECIES).map(x => <option key={x} value={x}>{ESPECIES[x]} {x}</option>)}
+                  </select>
+                </Campo>
+                <Campo label="Raça">
+                  <input style={inputStyle} value={form.raca ?? ''} onChange={e => set('raca', e.target.value)} placeholder="Ex.: Dachshund, Siamês, SRD" />
+                </Campo>
+                <Campo label="Porte">
+                  <select style={inputStyle} value={form.porte ?? ''} onChange={e => set('porte', e.target.value)}>
+                    <option value="">Selecione...</option>
+                    {['Pequeno', 'Médio', 'Grande', 'Gigante'].map(x => <option key={x} value={x}>{x}</option>)}
+                  </select>
+                </Campo>
+                <Campo label="Data de nascimento">
+                  <input style={inputStyle} type="date" value={form.nascimento ?? ''} onChange={e => set('nascimento', e.target.value)} />
+                </Campo>
+                <Campo label="Alergias">
+                  <textarea style={{ ...inputStyle, minHeight: 72, resize: 'vertical' }} value={form.alergias ?? ''} onChange={e => set('alergias', e.target.value)} placeholder="Vital para medicação e shampoos" />
+                </Campo>
+                <Campo label="Condições preexistentes">
+                  <textarea style={{ ...inputStyle, minHeight: 72, resize: 'vertical' }} value={form.condicoes ?? ''} onChange={e => set('condicoes', e.target.value)} placeholder="Doenças, cirurgias anteriores..." />
+                </Campo>
+                <button type="submit" disabled={salvando} style={{
+                  width: '100%', padding: '13px', borderRadius: 10, border: 'none',
+                  background: salvando ? '#7fcfb4' : '#2a9d78', color: '#fff',
+                  fontWeight: 700, fontSize: '1rem', cursor: salvando ? 'not-allowed' : 'pointer',
+                  fontFamily: 'inherit', marginTop: 8,
+                }}>
+                  {salvando ? 'Salvando...' : 'Salvar paciente'}
+                </button>
+              </form>
+            </div>
+          </div>
         </IonModal>
       </IonContent>
     </IonPage>
