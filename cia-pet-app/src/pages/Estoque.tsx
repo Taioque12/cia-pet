@@ -1,30 +1,37 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import {
   IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle,
-  IonToolbar, IonList, IonItem, IonLabel, IonSpinner, IonText, IonSearchbar,
-  IonBadge, IonButton, IonIcon, IonFab, IonFabButton, IonModal, IonInput,
-  IonTextarea, IonSelect, IonSelectOption, IonGrid, IonRow, IonCol, IonCard,
-  IonCardContent,
+  IonToolbar, IonSpinner, IonModal,
 } from '@ionic/react';
-import { add, createOutline, trashOutline, close, addCircleOutline, removeCircleOutline } from 'ionicons/icons';
 import { supabase } from '../lib/supabase';
 
 interface Insumo {
-  id: string;
-  nome: string;
-  categoria: string;
-  unidade: string;
-  quantidade: number;
-  minimo: number;
-  validade: string | null;
-  observacao: string | null;
+  id: string; nome: string; categoria: string; unidade: string;
+  quantidade: number; minimo: number; validade: string | null; observacao: string | null;
 }
 
 const CATEGORIAS = ['Medicamentos', 'Vacinas', 'Materiais Cirúrgicos', 'Higiene / Cosméticos', 'Alimentação', 'Administrativo', 'Outros'];
-
-const VAZIO = {
-  nome: '', categoria: '', unidade: '', quantidade: '0', minimo: '0', validade: '', observacao: '',
+const CAT_EMOJI: Record<string, string> = {
+  'Medicamentos': '💊', 'Vacinas': '💉', 'Materiais Cirúrgicos': '🔬',
+  'Higiene / Cosméticos': '🧴', 'Alimentação': '🍖', 'Administrativo': '📋', 'Outros': '📦',
 };
+
+const VAZIO = { nome: '', categoria: '', unidade: '', quantidade: '0', minimo: '0', validade: '', observacao: '' };
+
+const inputStyle: React.CSSProperties = {
+  width: '100%', padding: '11px 14px', borderRadius: 10, border: '1.5px solid #e4ece8',
+  fontSize: '.95rem', color: '#1a2e27', background: '#fff', boxSizing: 'border-box',
+  fontFamily: 'inherit', outline: 'none',
+};
+
+function Campo({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div style={{ marginBottom: 16 }}>
+      <label style={{ display: 'block', fontSize: '.82rem', fontWeight: 600, color: '#1a2e27', marginBottom: 6 }}>{label}</label>
+      {children}
+    </div>
+  );
+}
 
 function diasParaVencer(validade: string | null): number | null {
   if (!validade) return null;
@@ -39,19 +46,26 @@ function situacao(i: Insumo): 'vencido' | 'vencendo' | 'baixo' | 'ok' {
   return 'ok';
 }
 
-function BadgeSituacao({ insumo }: { insumo: Insumo }) {
-  const s = situacao(insumo);
-  const dias = diasParaVencer(insumo.validade);
-  if (s === 'vencido') return <IonBadge color="danger">Vencido</IonBadge>;
-  if (s === 'vencendo') return <IonBadge color="warning">Vence em {dias}d</IonBadge>;
-  if (s === 'baixo') return <IonBadge color="warning">Estoque baixo</IonBadge>;
-  return <IonBadge color="success">OK</IonBadge>;
+const STATUS_BADGE: Record<string, { bg: string; cor: string; label: (i: Insumo) => string }> = {
+  vencido:  { bg: '#fdecea', cor: '#d64545', label: () => '❌ Vencido' },
+  vencendo: { bg: '#fff8ec', cor: '#e07b39', label: (i) => `⚠️ Vence em ${diasParaVencer(i.validade)}d` },
+  baixo:    { bg: '#fff8ec', cor: '#e07b39', label: () => '📉 Estoque baixo' },
+  ok:       { bg: '#e3f3eb', cor: '#2a9d78', label: () => '✅ OK' },
+};
+
+function Stat({ label, valor, cor }: { label: string; valor: string | number; cor: string }) {
+  return (
+    <div style={{ flex: 1, minWidth: 120, background: '#fff', borderRadius: 14, padding: '16px 20px', boxShadow: '0 2px 12px rgba(0,0,0,.06)', textAlign: 'center' }}>
+      <div style={{ fontSize: '1.6rem', fontWeight: 800, color: cor }}>{valor}</div>
+      <div style={{ fontSize: '.78rem', color: '#6b7f79', marginTop: 4 }}>{label}</div>
+    </div>
+  );
 }
 
 export default function Estoque() {
   const [insumos, setInsumos] = useState<Insumo[]>([]);
   const [busca, setBusca] = useState('');
-  const [filtroCategoria, setFiltroCategoria] = useState('');
+  const [catFiltro, setCatFiltro] = useState('');
   const [carregando, setCarregando] = useState(true);
   const [aberto, setAberto] = useState(false);
   const [form, setForm] = useState<typeof VAZIO & { id?: string }>(VAZIO);
@@ -68,72 +82,46 @@ export default function Estoque() {
 
   async function salvar(e: FormEvent) {
     e.preventDefault();
-    if (!form.nome.trim()) { window.alert('Informe o nome do insumo.'); return; }
+    if (!form.nome.trim()) { window.alert('Informe o nome.'); return; }
     if (!form.categoria) { window.alert('Selecione a categoria.'); return; }
-    if (!form.unidade.trim()) { window.alert('Informe a unidade (ex.: un, ml, kg).'); return; }
+    if (!form.unidade.trim()) { window.alert('Informe a unidade.'); return; }
     setSalvando(true);
-    const dados = {
-      nome: form.nome,
-      categoria: form.categoria,
-      unidade: form.unidade,
-      quantidade: parseInt(form.quantidade) || 0,
-      minimo: parseInt(form.minimo) || 0,
-      validade: form.validade || null,
-      observacao: form.observacao || null,
-    };
-    const resp = form.id
-      ? await supabase.from('insumos').update(dados).eq('id', form.id)
-      : await supabase.from('insumos').insert(dados);
+    const dados = { nome: form.nome, categoria: form.categoria, unidade: form.unidade, quantidade: parseInt(form.quantidade) || 0, minimo: parseInt(form.minimo) || 0, validade: form.validade || null, observacao: form.observacao || null };
+    const resp = form.id ? await supabase.from('insumos').update(dados).eq('id', form.id) : await supabase.from('insumos').insert(dados);
     setSalvando(false);
-    if (resp.error) { window.alert('Erro ao salvar: ' + resp.error.message); return; }
-    setAberto(false);
-    carregar();
+    if (resp.error) { window.alert('Erro: ' + resp.error.message); return; }
+    setAberto(false); carregar();
   }
 
   async function excluir(i: Insumo) {
-    if (!window.confirm(`Excluir "${i.nome}" do estoque?`)) return;
+    if (!window.confirm(`Excluir "${i.nome}"?`)) return;
     const { error } = await supabase.from('insumos').delete().eq('id', i.id);
-    if (error) window.alert('Erro ao excluir: ' + error.message);
+    if (error) window.alert('Erro: ' + error.message);
     else carregar();
   }
 
   async function movimentar(i: Insumo, tipo: 'entrada' | 'saida') {
-    const acao = tipo === 'entrada' ? 'Entrada (repor)' : 'Saída (dar baixa)';
-    const qtdStr = window.prompt(`${acao} — ${i.nome}\nEstoque atual: ${i.quantidade} ${i.unidade}\n\nInforme a quantidade:`, '1');
+    const label = tipo === 'entrada' ? 'Entrada (repor estoque)' : 'Saída (dar baixa)';
+    const qtdStr = window.prompt(`${label}\n${i.nome} — atual: ${i.quantidade} ${i.unidade}\n\nQuantidade:`, '1');
     if (qtdStr === null) return;
     const qtd = parseInt(qtdStr, 10);
-    if (isNaN(qtd) || qtd <= 0) { window.alert('Informe um número válido maior que zero.'); return; }
+    if (isNaN(qtd) || qtd <= 0) { window.alert('Quantidade inválida.'); return; }
     const nova = tipo === 'entrada' ? i.quantidade + qtd : i.quantidade - qtd;
-    if (nova < 0) { window.alert('Estoque insuficiente para essa saída.'); return; }
+    if (nova < 0) { window.alert('Estoque insuficiente.'); return; }
     const { error } = await supabase.from('insumos').update({ quantidade: nova }).eq('id', i.id);
     if (error) window.alert('Erro: ' + error.message);
     else carregar();
   }
 
-  function abrirEditar(i: Insumo) {
-    setForm({
-      id: i.id,
-      nome: i.nome,
-      categoria: i.categoria,
-      unidade: i.unidade,
-      quantidade: String(i.quantidade),
-      minimo: String(i.minimo),
-      validade: i.validade ?? '',
-      observacao: i.observacao ?? '',
-    });
-    setAberto(true);
-  }
-
   const filtrados = insumos.filter((i) => {
     const t = busca.toLowerCase();
-    const nomeMatch = i.nome.toLowerCase().includes(t) || (i.observacao ?? '').toLowerCase().includes(t);
-    const catMatch = !filtroCategoria || i.categoria === filtroCategoria;
-    return nomeMatch && catMatch;
+    return (!catFiltro || i.categoria === catFiltro) &&
+      (i.nome.toLowerCase().includes(t) || (i.observacao ?? '').toLowerCase().includes(t));
   });
 
-  const totalBaixo = insumos.filter((i) => situacao(i) === 'baixo').length;
-  const totalVencendo = insumos.filter((i) => { const s = situacao(i); return s === 'vencido' || s === 'vencendo'; }).length;
-  const totalCategorias = new Set(insumos.map((i) => i.categoria)).size;
+  const totalBaixo   = insumos.filter((i) => situacao(i) === 'baixo').length;
+  const totalAlerta  = insumos.filter((i) => { const s = situacao(i); return s === 'vencido' || s === 'vencendo'; }).length;
+  const totalCats    = new Set(insumos.map((i) => i.categoria)).size;
 
   return (
     <IonPage>
@@ -143,172 +131,141 @@ export default function Estoque() {
           <IonTitle>Estoque / Insumos</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="ion-padding">
+      <IonContent style={{ '--background': '#f4f7f5' }}>
+        <div style={{ maxWidth: 960, margin: '0 auto', padding: '20px 16px' }}>
 
-        {/* Cards de estatísticas */}
-        <IonGrid className="ion-no-padding ion-margin-bottom">
-          <IonRow>
-            {[
-              { label: 'Total', valor: insumos.length, cor: 'primary' },
-              { label: 'Estoque baixo', valor: totalBaixo, cor: totalBaixo > 0 ? 'warning' : 'medium' },
-              { label: 'Validade', valor: totalVencendo, cor: totalVencendo > 0 ? 'danger' : 'medium' },
-              { label: 'Categorias', valor: totalCategorias, cor: 'secondary' },
-            ].map(({ label, valor, cor }) => (
-              <IonCol key={label} size="6" sizeMd="3">
-                <IonCard style={{ margin: '4px' }}>
-                  <IonCardContent style={{ textAlign: 'center', padding: '12px 8px' }}>
-                    <div style={{ fontSize: '1.6rem', fontWeight: 700, color: `var(--ion-color-${cor})` }}>{valor}</div>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--ion-color-medium)' }}>{label}</div>
-                  </IonCardContent>
-                </IonCard>
-              </IonCol>
+          {/* Cards resumo */}
+          <div style={{ display: 'flex', gap: 12, marginBottom: 20, flexWrap: 'wrap' }}>
+            <Stat label="Total de itens" valor={insumos.length} cor="#2a9d78" />
+            <Stat label="Estoque baixo" valor={totalBaixo} cor={totalBaixo > 0 ? '#e07b39' : '#6b7f79'} />
+            <Stat label="Validade / Vencido" valor={totalAlerta} cor={totalAlerta > 0 ? '#d64545' : '#6b7f79'} />
+            <Stat label="Categorias" valor={totalCats} cor="#5b6af5" />
+          </div>
+
+          {/* Busca + botão */}
+          <div style={{ display: 'flex', gap: 12, marginBottom: 14 }}>
+            <input
+              placeholder="🔍 Buscar insumo..."
+              value={busca}
+              onChange={e => setBusca(e.target.value)}
+              style={{ ...inputStyle, flex: 1 }}
+            />
+            <button onClick={() => { setForm(VAZIO); setAberto(true); }} style={{
+              padding: '11px 20px', borderRadius: 10, border: 'none', cursor: 'pointer',
+              background: '#2a9d78', color: '#fff', fontWeight: 700, fontSize: '.9rem',
+              fontFamily: 'inherit', whiteSpace: 'nowrap',
+            }}>+ Novo item</button>
+          </div>
+
+          {/* Filtro categoria */}
+          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 18 }}>
+            {['', ...CATEGORIAS].map((c) => (
+              <button key={c} onClick={() => setCatFiltro(c)} style={{
+                padding: '6px 14px', borderRadius: 20, border: 'none', cursor: 'pointer',
+                background: catFiltro === c ? '#2a9d78' : '#fff',
+                color: catFiltro === c ? '#fff' : '#5f6f69',
+                fontWeight: catFiltro === c ? 700 : 400, fontSize: '.82rem',
+                boxShadow: '0 2px 8px rgba(0,0,0,.06)', fontFamily: 'inherit',
+              }}>
+                {c ? `${CAT_EMOJI[c]} ${c}` : 'Todos'}
+              </button>
             ))}
-          </IonRow>
-        </IonGrid>
+          </div>
 
-        <IonSearchbar
-          placeholder="Buscar por nome ou observação..."
-          value={busca}
-          onIonInput={(e) => setBusca(e.detail.value ?? '')}
-        />
+          {/* Lista */}
+          {carregando ? (
+            <div style={{ textAlign: 'center', padding: 40 }}><IonSpinner /></div>
+          ) : filtrados.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: 48, color: '#6b7f79' }}>
+              <div style={{ fontSize: 40, marginBottom: 12 }}>📦</div>
+              <p style={{ margin: 0 }}>Nenhum insumo encontrado.</p>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {filtrados.map((i) => {
+                const sit = situacao(i);
+                const badge = STATUS_BADGE[sit];
+                const pct = i.minimo > 0 ? Math.min(100, Math.round((i.quantidade / (i.minimo * 2)) * 100)) : 100;
+                return (
+                  <div key={i.id} style={{
+                    background: '#fff', borderRadius: 14, padding: '16px 20px',
+                    boxShadow: '0 2px 12px rgba(0,0,0,.06)',
+                    display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap',
+                  }}>
+                    {/* Ícone categoria */}
+                    <div style={{
+                      width: 48, height: 48, borderRadius: 12, background: '#f0f4f2',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      fontSize: 22, flexShrink: 0,
+                    }}>
+                      {CAT_EMOJI[i.categoria] ?? '📦'}
+                    </div>
 
-        <IonSelect
-          style={{ marginBottom: 8 }}
-          label="Categoria"
-          labelPlacement="stacked"
-          placeholder="Todas as categorias"
-          value={filtroCategoria}
-          onIonChange={(e) => setFiltroCategoria(e.detail.value ?? '')}
-        >
-          <IonSelectOption value="">Todas</IonSelectOption>
-          {CATEGORIAS.map((c) => <IonSelectOption key={c} value={c}>{c}</IonSelectOption>)}
-        </IonSelect>
+                    {/* Info */}
+                    <div style={{ flex: 1, minWidth: 180 }}>
+                      <div style={{ fontWeight: 700, color: '#1a2e27', fontSize: '.97rem', marginBottom: 2 }}>{i.nome}</div>
+                      <div style={{ color: '#6b7f79', fontSize: '.8rem' }}>{i.categoria}</div>
+                      {i.observacao && <div style={{ color: '#a0aea9', fontSize: '.75rem', marginTop: 2 }}>{i.observacao}</div>}
+                      {/* Barra de estoque */}
+                      <div style={{ marginTop: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <div style={{ flex: 1, height: 5, background: '#f0f4f2', borderRadius: 4, overflow: 'hidden' }}>
+                          <div style={{ width: `${pct}%`, height: '100%', background: sit === 'ok' ? '#2a9d78' : sit === 'baixo' ? '#e07b39' : '#d64545', borderRadius: 4, transition: 'width .3s' }} />
+                        </div>
+                        <span style={{ fontSize: '.8rem', fontWeight: 700, color: '#1a2e27', whiteSpace: 'nowrap' }}>
+                          {i.quantidade} <span style={{ color: '#6b7f79', fontWeight: 400 }}>{i.unidade}</span>
+                        </span>
+                        <span style={{ fontSize: '.75rem', color: '#6b7f79' }}>/ mín. {i.minimo}</span>
+                      </div>
+                    </div>
 
-        {carregando ? (
-          <IonSpinner />
-        ) : filtrados.length === 0 ? (
-          <IonText color="medium"><p className="ion-padding">Nenhum insumo encontrado.</p></IonText>
-        ) : (
-          <IonList>
-            {filtrados.map((i) => {
-              const s = situacao(i);
-              const qtdCor = s === 'baixo' ? 'danger' : 'dark';
-              return (
-                <IonItem key={i.id} lines="full">
-                  <IonLabel className="ion-text-wrap">
-                    <h2>{i.nome}</h2>
-                    <p>{i.categoria}</p>
-                    {i.observacao && <p style={{ fontSize: '0.8rem', color: 'var(--ion-color-medium)' }}>{i.observacao}</p>}
-                    <p>
-                      <IonText color={qtdCor}><strong>{i.quantidade}</strong></IonText>
-                      {' / mín. '}{i.minimo} {i.unidade}
-                      {i.validade && ` · Val.: ${new Date(i.validade).toLocaleDateString('pt-BR')}`}
-                    </p>
-                  </IonLabel>
-                  <BadgeSituacao insumo={i} />
-                  <IonButton fill="clear" color="success" slot="end" title="Entrada" onClick={() => movimentar(i, 'entrada')}>
-                    <IonIcon slot="icon-only" icon={addCircleOutline} />
-                  </IonButton>
-                  <IonButton fill="clear" color="warning" slot="end" title="Saída" onClick={() => movimentar(i, 'saida')}>
-                    <IonIcon slot="icon-only" icon={removeCircleOutline} />
-                  </IonButton>
-                  <IonButton fill="clear" slot="end" onClick={() => abrirEditar(i)}>
-                    <IonIcon slot="icon-only" icon={createOutline} />
-                  </IonButton>
-                  <IonButton fill="clear" color="danger" slot="end" onClick={() => excluir(i)}>
-                    <IonIcon slot="icon-only" icon={trashOutline} />
-                  </IonButton>
-                </IonItem>
-              );
-            })}
-          </IonList>
-        )}
+                    {/* Badge status */}
+                    <span style={{ background: badge.bg, color: badge.cor, borderRadius: 8, padding: '5px 12px', fontSize: '.75rem', fontWeight: 700, flexShrink: 0 }}>
+                      {badge.label(i)}
+                    </span>
 
-        <IonFab slot="fixed" vertical="bottom" horizontal="end">
-          <IonFabButton onClick={() => { setForm(VAZIO); setAberto(true); }}>
-            <IonIcon icon={add} />
-          </IonFabButton>
-        </IonFab>
+                    {/* Ações */}
+                    <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
+                      <button onClick={() => movimentar(i, 'entrada')} title="Entrada" style={{ padding: '7px 12px', borderRadius: 8, border: '1.5px solid #e3f3eb', background: '#e3f3eb', color: '#2a9d78', cursor: 'pointer', fontFamily: 'inherit', fontSize: '.85rem', fontWeight: 700 }}>＋</button>
+                      <button onClick={() => movimentar(i, 'saida')} title="Saída" style={{ padding: '7px 12px', borderRadius: 8, border: '1.5px solid #fff8ec', background: '#fff8ec', color: '#e07b39', cursor: 'pointer', fontFamily: 'inherit', fontSize: '.85rem', fontWeight: 700 }}>－</button>
+                      <button onClick={() => { setForm({ id: i.id, nome: i.nome, categoria: i.categoria, unidade: i.unidade, quantidade: String(i.quantidade), minimo: String(i.minimo), validade: i.validade ?? '', observacao: i.observacao ?? '' }); setAberto(true); }} style={{ padding: '7px 12px', borderRadius: 8, border: '1.5px solid #e4ece8', background: '#fff', color: '#1a2e27', cursor: 'pointer', fontFamily: 'inherit', fontSize: '.82rem' }}>✏️</button>
+                      <button onClick={() => excluir(i)} style={{ padding: '7px 12px', borderRadius: 8, border: '1.5px solid #fdecea', background: '#fdecea', color: '#d64545', cursor: 'pointer', fontFamily: 'inherit', fontSize: '.82rem' }}>🗑️</button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
 
+        {/* Modal */}
         <IonModal isOpen={aberto} onDidDismiss={() => setAberto(false)}>
-          <IonHeader>
-            <IonToolbar color="primary">
-              <IonTitle>{form.id ? 'Editar insumo' : 'Novo insumo'}</IonTitle>
-              <IonButtons slot="end">
-                <IonButton onClick={() => setAberto(false)}>
-                  <IonIcon slot="icon-only" icon={close} />
-                </IonButton>
-              </IonButtons>
-            </IonToolbar>
-          </IonHeader>
-          <IonContent className="ion-padding">
-            <form onSubmit={salvar}>
-              <IonInput
-                className="ion-margin-bottom"
-                label="Nome do insumo *"
-                labelPlacement="stacked"
-                placeholder="Ex.: Amoxicilina 500mg"
-                value={form.nome}
-                onIonInput={(e) => set('nome', e.detail.value ?? '')}
-              />
-              <IonSelect
-                className="ion-margin-bottom"
-                label="Categoria *"
-                labelPlacement="stacked"
-                placeholder="Selecione"
-                value={form.categoria}
-                onIonChange={(e) => set('categoria', e.detail.value)}
-              >
-                {CATEGORIAS.map((c) => <IonSelectOption key={c} value={c}>{c}</IonSelectOption>)}
-              </IonSelect>
-              <IonInput
-                className="ion-margin-bottom"
-                label="Unidade *"
-                labelPlacement="stacked"
-                placeholder="Ex.: un, ml, kg, caixa"
-                value={form.unidade}
-                onIonInput={(e) => set('unidade', e.detail.value ?? '')}
-              />
-              <IonInput
-                className="ion-margin-bottom"
-                label="Quantidade em estoque"
-                labelPlacement="stacked"
-                type="number"
-                inputmode="numeric"
-                value={form.quantidade}
-                onIonInput={(e) => set('quantidade', e.detail.value ?? '0')}
-              />
-              <IonInput
-                className="ion-margin-bottom"
-                label="Quantidade mínima (alerta)"
-                labelPlacement="stacked"
-                type="number"
-                inputmode="numeric"
-                value={form.minimo}
-                onIonInput={(e) => set('minimo', e.detail.value ?? '0')}
-              />
-              <IonInput
-                className="ion-margin-bottom"
-                label="Validade"
-                labelPlacement="stacked"
-                type="date"
-                value={form.validade}
-                onIonInput={(e) => set('validade', e.detail.value ?? '')}
-              />
-              <IonTextarea
-                className="ion-margin-bottom"
-                label="Observação"
-                labelPlacement="stacked"
-                autoGrow
-                placeholder="Ex.: Manter refrigerado"
-                value={form.observacao}
-                onIonInput={(e) => set('observacao', e.detail.value ?? '')}
-              />
-              <IonButton type="submit" expand="block" className="ion-margin-top" disabled={salvando}>
-                {salvando ? <IonSpinner name="crescent" /> : 'Salvar insumo'}
-              </IonButton>
-            </form>
-          </IonContent>
+          <div style={{ height: '100%', background: '#f4f7f5', display: 'flex', flexDirection: 'column' }}>
+            <div style={{ background: 'linear-gradient(135deg,#1c6f54,#2a9d78)', padding: '20px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <h2 style={{ color: '#fff', margin: 0, fontSize: '1.1rem', fontWeight: 800 }}>{form.id ? '✏️ Editar insumo' : '📦 Novo insumo'}</h2>
+              <button onClick={() => setAberto(false)} style={{ background: 'rgba(255,255,255,.2)', border: 'none', borderRadius: 8, color: '#fff', padding: '6px 12px', cursor: 'pointer', fontSize: '1rem' }}>✕</button>
+            </div>
+            <div style={{ flex: 1, overflowY: 'auto', padding: '24px' }}>
+              <form onSubmit={salvar}>
+                <Campo label="Nome do insumo *"><input style={inputStyle} value={form.nome} onChange={e => set('nome', e.target.value)} placeholder="Ex.: Amoxicilina 500mg" /></Campo>
+                <Campo label="Categoria *">
+                  <select style={inputStyle} value={form.categoria} onChange={e => set('categoria', e.target.value)}>
+                    <option value="">Selecione...</option>
+                    {CATEGORIAS.map(c => <option key={c} value={c}>{CAT_EMOJI[c]} {c}</option>)}
+                  </select>
+                </Campo>
+                <Campo label="Unidade *"><input style={inputStyle} value={form.unidade} onChange={e => set('unidade', e.target.value)} placeholder="Ex.: un, ml, kg, caixa" /></Campo>
+                <div style={{ display: 'flex', gap: 12 }}>
+                  <div style={{ flex: 1 }}><Campo label="Qtd. em estoque"><input style={inputStyle} type="number" value={form.quantidade} onChange={e => set('quantidade', e.target.value)} /></Campo></div>
+                  <div style={{ flex: 1 }}><Campo label="Qtd. mínima (alerta)"><input style={inputStyle} type="number" value={form.minimo} onChange={e => set('minimo', e.target.value)} /></Campo></div>
+                </div>
+                <Campo label="Validade"><input style={inputStyle} type="date" value={form.validade} onChange={e => set('validade', e.target.value)} /></Campo>
+                <Campo label="Observação"><textarea style={{ ...inputStyle, minHeight: 68, resize: 'vertical' }} value={form.observacao} onChange={e => set('observacao', e.target.value)} placeholder="Ex.: Manter refrigerado" /></Campo>
+                <button type="submit" disabled={salvando} style={{ width: '100%', padding: '13px', borderRadius: 10, border: 'none', background: salvando ? '#7fcfb4' : '#2a9d78', color: '#fff', fontWeight: 700, fontSize: '1rem', cursor: salvando ? 'not-allowed' : 'pointer', fontFamily: 'inherit', marginTop: 8 }}>
+                  {salvando ? 'Salvando...' : 'Salvar insumo'}
+                </button>
+              </form>
+            </div>
+          </div>
         </IonModal>
       </IonContent>
     </IonPage>

@@ -45,7 +45,7 @@ export default function Site() {
       status: 'Pendente',
     });
     setEnviando(false);
-    if (error) { setErro(`Erro: ${error.message} (${error.code})`); return; }
+    if (error) { setErro('Erro ao enviar. Tente novamente ou ligue para nós: (14) 3264-7135'); return; }
     setSucesso(`Solicitação enviada! O agendamento de ${form.petNome} (${form.setor}) está PENDENTE. A recepção entrará em contato pelo ${form.tutorTelefone} para confirmar.`);
     setForm(VAZIO);
   }
