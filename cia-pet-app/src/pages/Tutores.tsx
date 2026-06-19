@@ -1,7 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import {
   IonButtons, IonContent, IonHeader, IonMenuButton, IonPage,
-  IonTitle, IonToolbar, IonSpinner, IonModal, IonInput,
+  IonTitle, IonToolbar, IonSpinner, IonModal,
 } from '@ionic/react';
 import { supabase } from '../lib/supabase';
 
