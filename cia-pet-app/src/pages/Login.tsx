@@ -4,6 +4,7 @@ import {
   IonInput, IonButton, IonSpinner, IonText, IonCard, IonCardHeader,
   IonCardTitle, IonCardContent, IonNote,
 } from '@ionic/react';
+import { useHistory } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 
 export default function Login() {
@@ -11,14 +12,19 @@ export default function Login() {
   const [senha, setSenha] = useState('');
   const [erro, setErro] = useState<string | null>(null);
   const [enviando, setEnviando] = useState(false);
+  const history = useHistory();
 
   async function entrar(e: FormEvent) {
     e.preventDefault();
     setEnviando(true);
     setErro(null);
     const { error } = await supabase.auth.signInWithPassword({ email, password: senha });
-    if (error) setErro('E-mail ou senha inválidos.');
-    setEnviando(false);
+    if (error) {
+      setErro('E-mail ou senha inválidos.');
+      setEnviando(false);
+    } else {
+      history.replace('/dashboard');
+    }
   }
 
   return (

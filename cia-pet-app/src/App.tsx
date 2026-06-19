@@ -15,6 +15,15 @@ import Tutores from './pages/Tutores';
 import Estoque from './pages/Estoque';
 import Financeiro from './pages/Financeiro';
 
+function AdminRoute({ component: Component, session, loading, ...rest }: any) {
+  if (loading) return null;
+  return (
+    <Route {...rest} render={() =>
+      session ? <Component /> : <Redirect to="/login" />
+    } />
+  );
+}
+
 export default function App() {
   const { session, loading } = useAuth();
 
@@ -28,44 +37,26 @@ export default function App() {
     );
   }
 
-  // Não autenticado: site público + login
-  if (!session) {
-    return (
-      <IonApp>
-        <IonReactRouter>
-          <IonRouterOutlet>
-            <Route path="/" exact component={Site} />
-            <Route path="/login" exact component={Login} />
-            <Route render={() => <Redirect to="/" />} />
-          </IonRouterOutlet>
-        </IonReactRouter>
-      </IonApp>
-    );
-  }
-
-  // Autenticado: site público + painel admin
   return (
     <IonApp>
       <IonReactRouter>
-        <IonRouterOutlet>
-          <Route path="/" exact component={Site} />
-          <Route render={() => (
-            <IonSplitPane contentId="main">
-              <Menu />
-              <IonRouterOutlet id="main">
-                <Route path="/dashboard" component={Dashboard} exact />
-                <Route path="/agendamentos" component={Agendamentos} exact />
-                <Route path="/pacientes" component={Pacientes} exact />
-                <Route path="/pacientes/:petId/prontuarios" component={Prontuarios} exact />
-                <Route path="/tutores" component={Tutores} exact />
-                <Route path="/estoque" component={Estoque} exact />
-                <Route path="/financeiro" component={Financeiro} exact />
-                <Route path="/login" render={() => <Redirect to="/dashboard" />} exact />
-                <Route render={() => <Redirect to="/dashboard" />} />
-              </IonRouterOutlet>
-            </IonSplitPane>
-          )} />
-        </IonRouterOutlet>
+        <IonSplitPane contentId="main" when={session ? 'md' : 'false'}>
+          {session && <Menu />}
+          <IonRouterOutlet id="main">
+            <Route path="/" exact component={Site} />
+            <Route path="/login" exact render={() =>
+              session ? <Redirect to="/dashboard" /> : <Login />
+            } />
+            <AdminRoute path="/dashboard" component={Dashboard} session={session} loading={loading} exact />
+            <AdminRoute path="/agendamentos" component={Agendamentos} session={session} loading={loading} exact />
+            <AdminRoute path="/pacientes" component={Pacientes} session={session} loading={loading} exact />
+            <AdminRoute path="/pacientes/:petId/prontuarios" component={Prontuarios} session={session} loading={loading} exact />
+            <AdminRoute path="/tutores" component={Tutores} session={session} loading={loading} exact />
+            <AdminRoute path="/estoque" component={Estoque} session={session} loading={loading} exact />
+            <AdminRoute path="/financeiro" component={Financeiro} session={session} loading={loading} exact />
+            <Route render={() => <Redirect to={session ? '/dashboard' : '/'} />} />
+          </IonRouterOutlet>
+        </IonSplitPane>
       </IonReactRouter>
     </IonApp>
   );
