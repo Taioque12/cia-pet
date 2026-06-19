@@ -45,7 +45,7 @@ export default function Site() {
       status: 'Pendente',
     });
     setEnviando(false);
-    if (error) { setErro('Erro ao enviar. Tente novamente ou ligue para nós.'); return; }
+    if (error) { setErro(`Erro: ${error.message} (${error.code})`); return; }
     setSucesso(`Solicitação enviada! O agendamento de ${form.petNome} (${form.setor}) está PENDENTE. A recepção entrará em contato pelo ${form.tutorTelefone} para confirmar.`);
     setForm(VAZIO);
   }
