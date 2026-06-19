@@ -1,5 +1,6 @@
-import { useState, type FormEvent } from 'react';
+import { useState, useRef, type FormEvent } from 'react';
 import { useHistory } from 'react-router-dom';
+import { IonPage, IonContent } from '@ionic/react';
 import { supabase } from '../lib/supabase';
 import '../site.css';
 
@@ -9,6 +10,7 @@ const VAZIO = { tutorNome: '', tutorTelefone: '', petNome: '', setor: '', data: 
 
 export default function Site() {
   const history = useHistory();
+  const contentRef = useRef<HTMLIonContentElement>(null);
   const [menuAberto, setMenuAberto] = useState(false);
   const [form, setForm] = useState(VAZIO);
   const [enviando, setEnviando] = useState(false);
@@ -17,7 +19,10 @@ export default function Site() {
 
   function ir(id: string) {
     setMenuAberto(false);
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    const el = document.getElementById(id);
+    if (el && contentRef.current) {
+      contentRef.current.scrollToPoint(0, el.offsetTop - 70, 600);
+    }
   }
 
   const set = (c: string, v: string) => setForm((f) => ({ ...f, [c]: v }));
@@ -46,6 +51,8 @@ export default function Site() {
   }
 
   return (
+    <IonPage>
+    <IonContent ref={contentRef} scrollY>
     <div className="sp-root">
       {/* HEADER */}
       <header className="sp-header" style={{ position: 'relative' }}>
@@ -295,5 +302,7 @@ export default function Site() {
         </div>
       </footer>
     </div>
+    </IonContent>
+    </IonPage>
   );
 }
