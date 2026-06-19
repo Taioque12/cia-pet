@@ -6,11 +6,11 @@ import {
 import { supabase } from '../lib/supabase';
 
 interface Usuario {
-  id: string; email: string; nome: string;
+  id: string; email: string; nome: string; crmv: string;
   criado: string; ultimo_login: string | null;
 }
 
-const VAZIO = { email: '', password: '', nome: '' };
+const VAZIO = { email: '', password: '', nome: '', crmv: '' };
 
 const inputStyle: React.CSSProperties = {
   width: '100%', padding: '11px 14px', borderRadius: 10, border: '1.5px solid #e4ece8',
@@ -88,7 +88,7 @@ export default function Usuarios() {
 
   function abrirEditar(u: Usuario) {
     setEditando(u);
-    setForm({ email: u.email, password: '', nome: u.nome });
+    setForm({ email: u.email, password: '', nome: u.nome, crmv: u.crmv ?? '' });
     setErro('');
     setAberto(true);
   }
@@ -99,9 +99,9 @@ export default function Usuarios() {
     setSalvando(true);
     let res: { error?: string };
     if (editando) {
-      res = await chamarAPI('PATCH', { id: editando.id, nome: form.nome, ...(form.password ? { password: form.password } : {}) });
+      res = await chamarAPI('PATCH', { id: editando.id, nome: form.nome, crmv: form.crmv, ...(form.password ? { password: form.password } : {}) });
     } else {
-      res = await chamarAPI('POST', { email: form.email, password: form.password, nome: form.nome });
+      res = await chamarAPI('POST', { email: form.email, password: form.password, nome: form.nome, crmv: form.crmv });
     }
     setSalvando(false);
     if (res.error) { setErro(res.error); return; }
@@ -160,7 +160,9 @@ export default function Usuarios() {
                     <div style={{ fontWeight: 700, color: '#1a2e27', fontSize: '.97rem' }}>
                       {u.nome || '—'}
                     </div>
-                    <div style={{ color: '#6b7f79', fontSize: '.82rem', marginTop: 2 }}>✉️ {u.email}</div>
+                    <div style={{ color: '#6b7f79', fontSize: '.82rem', marginTop: 2 }}>
+                      ✉️ {u.email}{u.crmv ? ` · 🩺 ${u.crmv}` : ''}
+                    </div>
                     <div style={{ color: '#a0aea9', fontSize: '.75rem', marginTop: 2 }}>
                       Criado em {dataBR(u.criado)}
                       {u.ultimo_login && ` · Último acesso: ${dataBR(u.ultimo_login)}`}
@@ -199,7 +201,10 @@ export default function Usuarios() {
               )}
               <form onSubmit={salvar}>
                 <Campo label="Nome">
-                  <input style={inputStyle} value={form.nome} onChange={e => set('nome', e.target.value)} placeholder="Nome completo" />
+                  <input style={inputStyle} value={form.nome} onChange={e => set('nome', e.target.value)} placeholder="Ex.: Dr. Ighor Morales" />
+                </Campo>
+                <Campo label="CRMV (aparece no receituário)">
+                  <input style={inputStyle} value={form.crmv} onChange={e => set('crmv', e.target.value)} placeholder="Ex.: CRMV-SP 12345 (opcional)" />
                 </Campo>
                 <Campo label="E-mail *">
                   <input style={{ ...inputStyle, background: editando ? '#f4f7f5' : '#fff', color: editando ? '#6b7f79' : '#1a2e27' }}
